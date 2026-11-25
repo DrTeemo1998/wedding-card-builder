@@ -11,8 +11,15 @@
  *  3. Deploy → New deployment → Web app → Execute as: Me, Who has access: Anyone.
  *     Copy link .../exec, dán vào ô "Link Apps Script Web App" ở tab Cài đặt & Xuất
  *     trong file thiep-cuoi-online-ban-html.html.
+ *     LƯU Ý: mỗi lần sửa mã (kể cả thêm doGet JSONP đọc lời chúc) phải Deploy lại
+ *     (New deployment) thì link /exec mới chạy mã mới.
  *  4. Bấm "Đọc dữ liệu từ Sheet" để kiểm tra: phải trả về đủ lichTrinh, cauChuyen,
  *     album, mungCuoi, caiDat — không chỉ sheet 1 như mã cũ.
+ *
+ * LỜI CHÚC 2 CHIỀU (mới): thiệp đã xuất không chỉ GỬI lời chúc về Sheet
+ * (doPost) mà còn ĐỌC LẠI lời chúc từ Sheet (doGet ?callback=...) để hiện
+ * ngay trên thiệp cho cả khách gửi lẫn cô dâu chú rể cùng xem. doGet chỉ
+ * trả tên / tham dự / số người / lời chúc / thời gian — KHÔNG trả SĐT.
  *
  * KHÁC BIỆT SO VỚI MÃ CŨ (sheet 8):
  *  - Mã cũ: doGet chỉ đọc 1_THONG_TIN, doPost chỉ ghi RSVP về 5_RSVP_KHACH_MOI.
@@ -78,10 +85,38 @@ function nowVn_() {
   return Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH:mm:ss');
 }
 
+/* Lời chúc công khai để thiệp đọc lại và hiện cho mọi người cùng xem:
+   chỉ lấy tên, tham dự, số người, lời chúc, thời gian — KHÔNG trả SĐT. */
+function publicWishes_(rows) {
+  var out = [];
+  rows.forEach(function (r) {
+    var name = '', attend = '', guests = 0, wish = '', at = '';
+    Object.keys(r).forEach(function (k) {
+      var kl = String(k).toLowerCase();
+      if (/tên|ten|khách|name/.test(kl) && !name) name = String(r[k] || '');
+      else if (/tham dự|tham du|attending/.test(kl) && !attend) attend = String(r[k] || '');
+      else if (/số người|so nguoi|số khách|guests/.test(kl)) guests = Number(r[k]) || 0;
+      else if (/lời chúc|loi chuc|wish|ghi chú/.test(kl) && !wish) wish = String(r[k] || '');
+      else if (/thời gian|thoi gian|ngày|date/.test(kl) && !at) at = String(r[k] || '');
+    });
+    if (name || wish) out.push({ name: name, attend: attend, count: guests, message: wish, at: at });
+  });
+  return out.reverse(); /* mới nhất lên đầu */
+}
+
 function doGet(e) {
   var info = kvFromSheet_(SHEET_INFO);
   var settings = kvFromSheet_(SHEET_SETTINGS);
   var rsvpRows = tableFromSheet_(SHEET_RSVP);
+
+  /* JSONP: thiệp đã xuất đọc lại lời chúc để hiện cho mọi người cùng xem.
+     Gọi .../exec?callback=__wcbWishes — chỉ trả tên / tham dự / số người /
+     lời chúc / thời gian, KHÔNG bao giờ trả SĐT của khách. */
+  if (e && e.parameter && e.parameter.callback) {
+    var cb = String(e.parameter.callback).replace(/[^A-Za-z0-9_$]/g, '') || 'callback';
+    return ContentService.createTextOutput(cb + '(' + JSON.stringify({ wishes: publicWishes_(rsvpRows) }) + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
 
   /* Tổng hợp RSVP — dùng đúng dữ liệu đang có trong sheet 5. */
   var attending = 0, notAttending = 0, pending = 0, guestsComing = 0;
