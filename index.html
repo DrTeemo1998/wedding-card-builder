@@ -197,6 +197,8 @@
           <div class="field"><label>Branch</label><input id="ghBranch" value="main"></div>
           <div class="field"><label>Thư mục đích</label><input value="khach-hang/&lt;slug&gt;/index.html" disabled></div>
         </div>
+        <div class="field mt-3"><label>Tên miền tùy chỉnh (Custom Domain)</label><input id="ghDomain" placeholder="thiepcuoionline.me — để trống nếu dùng github.io" autocomplete="off"></div>
+        <p class="text-xs text-stone-500 -mt-1 mb-3">Nếu đã nhập tên miền, link thiệp trả về sẽ dùng tên miền đó và Builder tự ghi file <b>CNAME</b> ở thư mục gốc của repo. Mở Builder ngay trên tên miền riêng (hoặc bản mirror pages.dev / vercel.app) thì Builder tự nhận tên miền đang mở làm link thiệp.</p>
         <div class="field mt-3"><label>Personal Access Token</label><input id="ghToken" type="password" autocomplete="off"></div>
         <label class="flex items-center gap-3 cursor-pointer text-sm mb-3">
           <input id="ghSaveToken" type="checkbox" class="w-5 h-5 accent-[#8c6b3e]"> Lưu token trên máy này (localStorage)
