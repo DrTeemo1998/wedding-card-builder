@@ -237,10 +237,23 @@
       if (!box) return;
       var url = ExportLib.vietqrUrl(state[who + "Bank"], state[who + "Account"], state[who + "AccountName"], state.giftAmount, state.giftNote || "Mung cuoi");
       if (url) {
-        box.innerHTML = '<img src="' + ExportLib.esc(url) + '" alt="QR VietQR ' + who + '">' +
-          '<p style="font-size:12px;color:#6b7280;text-align:center">' + ExportLib.esc(state[who + "Bank"]) + " · " + ExportLib.esc(state[who + "Account"]) + " · " + ExportLib.esc(state[who + "AccountName"]) + "</p>";
+        /* Tạo <img> bằng DOM và gắn onerror TRƯỚC khi gán src — nếu VietQR
+           trả 404 (sai mã ngân hàng) thì hiện câu báo lỗi rõ ràng thay vì
+           icon ảnh vỡ. */
+        box.innerHTML = "";
+        var img = document.createElement("img");
+        img.alt = "QR VietQR " + who;
+        img.addEventListener("error", function () {
+          box.innerHTML = '<p style="font-size:13px;color:#dc2626;text-align:center;padding:12px">Không tạo được mã QR — kiểm tra lại tên ngân hàng (ví dụ: Vietcombank) và số tài khoản.</p>';
+        });
+        img.src = url;
+        box.appendChild(img);
+        var cap = document.createElement("p");
+        cap.style.cssText = "font-size:12px;color:#6b7280;text-align:center";
+        cap.textContent = state[who + "Bank"] + " · " + state[who + "Account"] + (state[who + "AccountName"] ? " · " + state[who + "AccountName"] : "");
+        box.appendChild(cap);
       } else {
-        box.innerHTML = '<p style="font-size:13px;color:#9ca3af;text-align:center;padding:12px">Nhập đủ Ngân hàng + Số TK + Tên chủ TK để xem mã QR VietQR.</p>';
+        box.innerHTML = '<p style="font-size:13px;color:#9ca3af;text-align:center;padding:12px">Nhập Ngân hàng + Số TK để xem mã QR VietQR (tên chủ TK không bắt buộc).</p>';
       }
     });
     var mapFrame = $("#mapPreview");
@@ -377,8 +390,8 @@
   function rsvpHintText(cfg) {
     if (cfg.mode === "apps-script" && !cfg.appsScriptUrl) return "⚠ Đang chọn Apps Script nhưng chưa dán URL — thiệp xuất sẽ chỉ lưu lời chúc trên máy khách và báo rõ là chưa cấu hình. Xem docs/RSVP.md để deploy Web App.";
     if (cfg.mode === "formspree" && !cfg.formspreeUrl) return "⚠ Đang chọn Formspree nhưng chưa dán endpoint — thiệp xuất sẽ chỉ lưu lời chúc trên máy khách và báo rõ là chưa cấu hình.";
-    if (cfg.mode === "apps-script") return "✓ Đã có Apps Script URL — thiệp xuất sẽ POST thật về Google Sheet.";
-    if (cfg.mode === "formspree") return "✓ Đã có Formspree endpoint — thiệp xuất sẽ POST thật về Formspree.";
+    if (cfg.mode === "apps-script") return "✓ Đã có Apps Script URL — thiệp xuất sẽ POST thật về Google Sheet, và thiệp sẽ đọc lại lời chúc từ Sheet để hiện cho cả khách lẫn cô dâu chú rể cùng xem.";
+    if (cfg.mode === "formspree") return "✓ Đã có Formspree endpoint — thiệp xuất sẽ POST thật về Formspree (lời chúc về email; thiệp không đọc lại được nên không hiện trên thiệp).";
     return "Chế độ chỉ lưu trên máy khách — cô dâu chú rể sẽ không nhận được RSVP.";
   }
   function updateRsvpHint() {
