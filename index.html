@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wedding Card Builder — Tạo thiệp cưới online</title>
+<meta name="description" content="Admin Builder tạo thiệp cưới online: nhập liệu, xem trước trực tiếp, xuất file HTML độc lập hoặc đẩy lên GitHub Pages cho khách.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/css/style.css">
+<style id="previewStyle"></style>
+</head>
+<body class="bg-stone-100 text-stone-900">
+
+<header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-stone-200">
+  <div class="max-w-[1400px] mx-auto px-4 py-3 flex flex-wrap items-center gap-3 justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-full border-2 border-[#8c6b3e] grid place-items-center font-serif font-bold text-[#8c6b3e] text-lg">N&amp;H</div>
+      <div>
+        <b class="font-serif text-xl leading-tight block">Wedding Card Builder</b>
+        <span class="text-xs text-stone-500">Admin Builder · Xuất HTML độc lập · Push GitHub Pages</span>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-2 items-center">
+      <span id="saveState" class="text-xs text-stone-500 hidden sm:inline">Chưa lưu</span>
+      <button id="btnLoadSample" type="button" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-sm font-semibold hover:border-[#8c6b3e]">Nạp dữ liệu mẫu</button>
+      <button id="btnSave" type="button" class="px-4 py-2 rounded-full border border-stone-300 bg-white text-sm font-semibold hover:border-[#8c6b3e]">Lưu</button>
+      <button id="btnClear" type="button" class="px-4 py-2 rounded-full border border-red-300 text-red-600 bg-white text-sm font-semibold">Xoá</button>
+      <button id="btnExportHtml" type="button" class="px-4 py-2 rounded-full bg-[#8c6b3e] text-white text-sm font-bold">⬇ Xuất file HTML độc lập</button>
+    </div>
+  </div>
+  <div class="lg:hidden max-w-[1400px] mx-auto px-4 pb-3 flex gap-2">
+    <button id="tabBuilder" type="button" aria-pressed="true" class="flex-1 py-2 rounded-full text-sm font-bold bg-[#8c6b3e] text-white">✎ Soạn thiệp</button>
+    <button id="tabPreview" type="button" aria-pressed="false" class="flex-1 py-2 rounded-full text-sm font-bold bg-white border border-stone-300">👁 Xem trước</button>
+  </div>
+</header>
+
+<main class="max-w-[1400px] mx-auto px-4 py-5">
+  <div class="bg-amber-50 border border-amber-300 text-amber-900 rounded-xl px-4 py-3 text-sm mb-5">
+    <b>DỮ LIỆU MẪU - CẦN XÁC NHẬN:</b> dữ liệu mẫu Minh Nhật &amp; Thái Hà lấy từ Sheet gốc.
+    Tên địa điểm tiệc “Nhà Hàng Crown Tiền Hải” chưa xác nhận 100% có phải Crown Palace hay không;
+    số tài khoản cô dâu Vietcombank <b>376634531</b> chỉ có 9 chữ số, chưa xác thực.
+    Vui lòng xác nhận với cô dâu chú rể trước khi gửi thiệp cho khách thật.
+  </div>
+
+  <div class="grid lg:grid-cols-[480px_minmax(0,1fr)] gap-6 items-start">
+
+    <!-- ============ CỘT BUILDER ============ -->
+    <div id="builderCol" class="space-y-5 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:pr-1">
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">1 · Cô dâu &amp; chú rể</h2>
+        <p class="text-sm text-stone-500 mb-4">Tên hiển thị lớn trên bìa thiệp.</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="field"><label>Tên chú rể</label><input data-bind="groomName"></div>
+          <div class="field"><label>Tên cô dâu</label><input data-bind="brideName"></div>
+          <div class="field"><label>Chú rể là con của — Ông</label><input data-bind="groomFather"></div>
+          <div class="field"><label>Chú rể là con của — Bà</label><input data-bind="groomMother"></div>
+          <div class="field"><label>Cô dâu là con của — Ông</label><input data-bind="brideFather"></div>
+          <div class="field"><label>Cô dâu là con của — Bà</label><input data-bind="brideMother"></div>
+          <div class="field"><label>SĐT chú rể</label><input data-bind="groomPhone" inputmode="tel"></div>
+          <div class="field"><label>SĐT cô dâu</label><input data-bind="bridePhone" inputmode="tel"></div>
+        </div>
+        <div class="field mt-3"><label>Lời ngỏ</label><textarea data-bind="inviteText"></textarea></div>
+        <div class="field"><label>Đường dẫn thiệp (slug)</label><input data-bind="slug"><p class="hint">Tự sinh từ tên cô dâu chú rể, ví dụ: minh-nhat-thai-ha. Dùng làm tên file và đường dẫn /khach-hang/…/ trên GitHub Pages.</p></div>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">2 · Ngày giờ &amp; địa điểm</h2>
+        <p class="text-sm text-stone-500 mb-4">Đếm ngược tính tới giờ lễ Vu Quy của ngày cưới (giờ Việt Nam).</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="field"><label>Ngày cưới</label><input type="date" data-bind="weddingDate"></div>
+          <div class="field"><label>Hạn RSVP</label><input type="date" data-bind="rsvpDeadline"></div>
+          <div class="field"><label>Giờ lễ Vu Quy</label><input data-bind="vuQuyTime"></div>
+          <div class="field"><label>Địa điểm Vu Quy</label><input data-bind="vuQuyPlace"></div>
+        </div>
+        <div class="field mt-3"><label>Địa chỉ nhà gái</label><input data-bind="vuQuyAddress"></div>
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div class="field"><label>Giờ đón khách</label><input data-bind="partyWelcome"></div>
+          <div class="field"><label>Giờ khai tiệc</label><input data-bind="partyStart"></div>
+        </div>
+        <div class="field mt-3"><label>Nhà hàng / địa điểm tiệc</label><input data-bind="partyPlace"></div>
+        <div class="field"><label>Địa chỉ tiệc</label><input data-bind="partyAddress"></div>
+        <div class="field"><label>Dress code</label><input data-bind="dressCode"></div>
+        <div class="field"><label>Xem trước bản đồ tiệc</label><iframe id="mapPreview" title="Bản đồ địa điểm tiệc" class="w-full h-56 rounded-xl border border-stone-200" loading="lazy"></iframe><p class="hint">Bản đồ tự sinh từ tên + địa chỉ tiệc (Google Maps Embed, không cần API key).</p></div>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">3 · Lịch trình</h2>
+        <p class="text-sm text-stone-500 mb-4">Thêm / xoá mốc thoải mái, xem trước tự cập nhật.</p>
+        <div id="scheduleList"></div>
+        <button id="addSchedule" type="button" class="px-4 py-2 rounded-full border border-stone-300 text-sm font-semibold">+ Thêm mốc thời gian</button>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">4 · Câu chuyện tình yêu</h2>
+        <p class="text-sm text-stone-500 mb-4">Các mốc chuyện của cặp đôi, hiển thị theo dòng thời gian.</p>
+        <div id="storyList"></div>
+        <button id="addStory" type="button" class="px-4 py-2 rounded-full border border-stone-300 text-sm font-semibold">+ Thêm mốc câu chuyện</button>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">5 · Album ảnh</h2>
+        <p class="text-sm text-stone-500 mb-4">Tối đa 8 ảnh. Dán link ảnh trực tiếp (https://…). Ảnh hiển thị dạng cover, tự crop đúng tỉ lệ bằng CSS.</p>
+        <div class="field"><label>Ảnh bìa thiệp</label><input data-bind="coverUrl" type="url"></div>
+        <div id="albumList"></div>
+        <button id="addAlbum" type="button" class="px-4 py-2 rounded-full border border-stone-300 text-sm font-semibold">+ Thêm ảnh vào album</button>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">6 · Nhạc nền MP3</h2>
+        <p class="text-sm text-stone-500 mb-4">Dán link file MP3 trực tiếp. Trên mobile, nhạc chỉ phát sau khi khách chạm nút ♪ (quy tắc autoplay của trình duyệt).</p>
+        <div class="field"><label>Link nhạc MP3</label><input data-bind="musicUrl" type="url"></div>
+        <button id="btnTestMusic" type="button" class="px-4 py-2 rounded-full border border-stone-300 text-sm font-semibold">▶ Nghe thử nhạc</button>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">7 · Mừng cưới &amp; QR VietQR</h2>
+        <p class="text-sm text-stone-500 mb-4">Nhập đủ Ngân hàng + Số TK + Tên chủ TK thì mã QR VietQR tự sinh. Kiểm tra kỹ số tài khoản trước khi công bố.</p>
+        <h3 class="font-bold text-sm text-[#8c6b3e] mb-2">Tài khoản chú rể</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="field"><label>Ngân hàng</label><input data-bind="groomBank"></div>
+          <div class="field"><label>Số tài khoản</label><input data-bind="groomAccount" inputmode="numeric"></div>
+          <div class="field col-span-2"><label>Chủ tài khoản (không dấu, như trên thẻ)</label><input data-bind="groomAccountName"></div>
+        </div>
+        <button type="button" data-copy-field="[data-bind='groomAccount']" class="text-sm font-semibold text-[#8c6b3e] underline">Sao chép STK chú rể</button>
+        <div id="qrGroom" class="qr-preview mt-2"></div>
+        <h3 class="font-bold text-sm text-[#8c6b3e] mt-5 mb-2">Tài khoản cô dâu</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="field"><label>Ngân hàng</label><input data-bind="brideBank"></div>
+          <div class="field"><label>Số tài khoản</label><input data-bind="brideAccount" inputmode="numeric"></div>
+          <div class="field col-span-2"><label>Chủ tài khoản (không dấu, như trên thẻ)</label><input data-bind="brideAccountName"></div>
+        </div>
+        <button type="button" data-copy-field="[data-bind='brideAccount']" class="text-sm font-semibold text-[#8c6b3e] underline">Sao chép STK cô dâu</button>
+        <div id="qrBride" class="qr-preview mt-2"></div>
+        <div class="grid grid-cols-2 gap-3 mt-4">
+          <div class="field"><label>Số tiền gợi ý (để trống = khách tự nhập)</label><input data-bind="giftAmount" inputmode="numeric"></div>
+          <div class="field"><label>Nội dung chuyển khoản</label><input data-bind="giftNote"></div>
+        </div>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">8 · Template &amp; hiệu ứng</h2>
+        <p class="text-sm text-stone-500 mb-4">Chọn mẫu — màu, font và khung viền của thiệp đổi ngay trong khung xem trước.</p>
+        <div id="templatePicker" class="grid grid-cols-2 gap-3"></div>
+        <div class="mt-5">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input id="particleToggle" type="checkbox" class="w-5 h-5 accent-[#8c6b3e]">
+            <span class="font-semibold text-sm">Bật hiệu ứng hạt rơi</span>
+          </label>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <button type="button" data-particle-type="sakura" class="seg" aria-pressed="true"><span class="px-3 py-2 text-sm font-semibold">🌸 Hoa đào rơi</span></button>
+            <button type="button" data-particle-type="heart" class="seg" aria-pressed="false"><span class="px-3 py-2 text-sm font-semibold">❤ Trái tim bay</span></button>
+            <button type="button" data-particle-type="snow" class="seg" aria-pressed="false"><span class="px-3 py-2 text-sm font-semibold">❄ Bông tuyết rơi</span></button>
+            <button type="button" data-particle-type="glitter" class="seg" aria-pressed="false"><span class="px-3 py-2 text-sm font-semibold">✨ Kim tuyến</span></button>
+          </div>
+          <p class="text-xs text-stone-500 mt-3">Canvas nhẹ 60fps, tối đa 36 hạt trên mobile / 70 hạt desktop (mobile = màn hình ≤640px hoặc máy có cảm ứng), tự dừng khi tab ẩn hoặc khi hệ thống bật giảm chuyển động. DPR giới hạn ở 2.</p>
+        </div>
+        <div class="mt-5 space-y-2">
+          <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" data-bind-check="showCountdown" class="w-5 h-5 accent-[#8c6b3e]"> Bật đếm ngược tới ngày cưới</label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" data-bind-check="showSchedule" class="w-5 h-5 accent-[#8c6b3e]"> Bật lịch trình</label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" data-bind-check="showStory" class="w-5 h-5 accent-[#8c6b3e]"> Bật câu chuyện tình yêu</label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" data-bind-check="showAlbum" class="w-5 h-5 accent-[#8c6b3e]"> Bật album ảnh</label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" data-bind-check="showGift" class="w-5 h-5 accent-[#8c6b3e]"> Bật mừng cưới &amp; QR ngân hàng</label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" data-bind-check="showRsvp" class="w-5 h-5 accent-[#8c6b3e]"> Bật RSVP &amp; sổ lưu bút (gửi thật về Google Sheet / Formspree nếu đã cấu hình ở mục 9, ngược lại chỉ lưu trên máy khách)</label>
+        </div>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">9 · Nhận RSVP / Lời chúc</h2>
+        <p class="text-sm text-stone-500 mb-4">Thiệp xuất ra là web tĩnh, không có database riêng — muốn nhận được RSVP thật của khách thì phải chọn một nơi nhận bên dưới. Hướng dẫn từng bước xem <b>docs/RSVP.md</b>.</p>
+        <div class="space-y-2 mb-4" role="radiogroup" aria-label="Chế độ nhận RSVP">
+          <label class="flex items-start gap-3 cursor-pointer text-sm border border-stone-200 rounded-xl p-3">
+            <input type="radio" name="rsvpMode" value="apps-script" class="w-5 h-5 accent-[#8c6b3e] mt-0.5">
+            <span><b>Google Apps Script → Google Sheet</b> (khuyên dùng)<br><span class="text-stone-500">Khách gửi lời chúc, Apps Script ghi thẳng vào sheet 5_RSVP_KHACH_MOI của file Sheet mẫu <i>mau-google-sheet-thiep-cuoi</i>. Miễn phí, không giới hạn.</span></span>
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer text-sm border border-stone-200 rounded-xl p-3">
+            <input type="radio" name="rsvpMode" value="formspree" class="w-5 h-5 accent-[#8c6b3e] mt-0.5">
+            <span><b>Formspree</b> (thay thế, không cần Sheet)<br><span class="text-stone-500">Khách gửi lời chúc, Formspree chuyển tiếp về email của bạn. Cần tạo form miễn phí trên formspree.io.</span></span>
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer text-sm border border-stone-200 rounded-xl p-3">
+            <input type="radio" name="rsvpMode" value="local" class="w-5 h-5 accent-[#8c6b3e] mt-0.5">
+            <span><b>Chỉ lưu trên máy khách</b> (mặc định)<br><span class="text-stone-500">Khách vẫn thấy lời chúc của mình ngay trên thiệp, nhưng cô dâu chú rể không nhận được — chỉ dùng khi chưa kịp cấu hình 2 cách trên.</span></span>
+          </label>
+        </div>
+        <div class="field"><label>Apps Script Web App URL (dạng https://script.google.com/macros/s/…/exec)</label><input id="rsvpAppsScriptUrl" type="url" placeholder="Dán link /exec sau khi Deploy Web App — để trống nếu chưa có" autocomplete="off"></div>
+        <div class="field"><label>Formspree endpoint (dạng https://formspree.io/f/xxxx)</label><input id="rsvpFormspreeUrl" type="url" placeholder="Dán endpoint Formspree — để trống nếu không dùng" autocomplete="off"></div>
+        <p id="rsvpHint" class="text-xs text-stone-500 mt-2"></p>
+        <p class="text-xs text-stone-500">Lưu ý: thiệp xuất dùng <b>fetch no-cors</b> khi gửi về Apps Script nên không đọc được phản hồi — thiệp chỉ báo “đang ghi vào Sheet” khi gửi đi không lỗi mạng. Luôn lưu thêm 1 bản trên máy khách để khách thấy lời chúc ngay.</p>
+      </section>
+
+      <section class="bg-white rounded-2xl border border-stone-200 p-5">
+        <h2 class="font-serif text-xl font-bold mb-1">10 · Xuất bản cho khách (Push GitHub)</h2>
+        <p class="text-sm text-stone-500 mb-4">Đẩy thiệp lên repo GitHub qua API, trả về link GitHub Pages sống ngay. Token chỉ gửi tới <b>api.github.com</b>, không gửi đi nơi nào khác.</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="field"><label>GitHub Owner</label><input id="ghOwner" autocomplete="off"></div>
+          <div class="field"><label>Repo</label><input id="ghRepo" value="wedding-card-builder"></div>
+          <div class="field"><label>Branch</label><input id="ghBranch" value="main"></div>
+          <div class="field"><label>Thư mục đích</label><input value="khach-hang/&lt;slug&gt;/index.html" disabled></div>
+        </div>
+        <div class="field mt-3"><label>Personal Access Token</label><input id="ghToken" type="password" autocomplete="off"></div>
+        <label class="flex items-center gap-3 cursor-pointer text-sm mb-3">
+          <input id="ghSaveToken" type="checkbox" class="w-5 h-5 accent-[#8c6b3e]"> Lưu token trên máy này (localStorage)
+        </label>
+        <div class="flex flex-wrap gap-2">
+          <button id="btnPushGithub" type="button" class="px-5 py-2.5 rounded-full bg-[#8c6b3e] text-white text-sm font-bold">🚀 Xuất bản cho khách</button>
+          <button id="btnCopyPages" type="button" class="px-5 py-2.5 rounded-full border border-stone-300 bg-white text-sm font-semibold" hidden>Sao chép link Pages</button>
+          <button id="btnClearToken" type="button" class="px-4 py-2.5 rounded-full border border-red-300 text-red-600 bg-white text-sm font-semibold">Xoá token</button>
+        </div>
+        <div id="ghStatus" class="status-line" role="status"></div>
+        <p class="text-xs text-stone-500 mt-3">Token cần quyền: classic PAT với scope <b>repo</b>, hoặc fine-grained PAT với quyền <b>Contents: Read and write</b> trên repo này. Xem chi tiết trong README.md mục “Cấu hình GitHub Token”.</p>
+      </section>
+
+      <p class="text-xs text-stone-500 pb-6">Dữ liệu tự lưu trên trình duyệt này (localStorage). Xuất file HTML hoặc push GitHub sau mỗi buổi làm việc để giữ lại thành quả.</p>
+    </div>
+
+    <!-- ============ CỘT PREVIEW ============ -->
+    <div id="previewCol" class="lg:sticky lg:top-[86px]">
+      <div class="flex items-center justify-between mb-3">
+        <b class="font-serif text-xl">Xem trước thiệp</b>
+        <div class="flex items-center gap-3">
+          <span id="previewSlug" class="text-xs text-stone-500 font-mono"></span>
+          <div class="seg">
+            <button type="button" data-preview-mode="mobile" aria-pressed="true">📱 Mobile 390px</button>
+            <button type="button" data-preview-mode="desktop" aria-pressed="false">🖥 Desktop</button>
+          </div>
+        </div>
+      </div>
+      <div id="previewFrame" class="preview-frame mobile">
+        <div class="h-6 bg-[#241d16] text-[#c9a86a] text-[11px] tracking-widest flex items-center justify-center flex-none">THIỆP CƯỚI ONLINE</div>
+        <div id="previewBox" class="preview-scroll"></div>
+      </div>
+      <p class="text-center text-stone-500 text-sm mt-3">Cuộn bên trong khung để xem hết thiệp. RSVP trong khung này là bản thử.</p>
+    </div>
+
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script src="assets/js/particles.js"></script>
+<script src="assets/js/export-template.js"></script>
+<script src="assets/js/sample-data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
