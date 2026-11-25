@@ -27,6 +27,14 @@ không đọc được phản hồi từ Apps Script. Thiệp chỉ báo "đang 
 khi gửi đi không lỗi mạng, đồng thời luôn lưu thêm 1 bản trên máy khách để
 khách thấy lời chúc của mình ngay.
 
+**Lời chúc 2 chiều:** thiệp đã xuất còn đọc lại lời chúc từ Sheet để hiện
+ngay trên thiệp cho cả khách gửi lẫn cô dâu chú rể cùng xem — bằng cách gọi
+`.../exec?callback=__wcbWishes` (JSONP, `doGet` trong
+`apps-script-full.gs` trả về danh sách lời chúc). Chỉ tên / tham dự / số
+người / lời chúc / thời gian được trả về, **SĐT của khách không bao giờ
+hiện trên thiệp**. Mỗi lần sửa mã Apps Script phải Deploy lại (New
+deployment) thì link `/exec` mới chạy mã mới.
+
 ## Cách 2 (thay thế): Formspree → Email
 
 Không cần Sheet, lời chúc chuyển tiếp về email của bạn.
