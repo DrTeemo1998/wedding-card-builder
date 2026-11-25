@@ -131,6 +131,9 @@
       engine.start();
     }
     tickCountdown();
+    // Nhạc nền trong khung preview: giữ lại thẻ <audio> thật + nút ♪ nổi,
+    // gán lại src mỗi khi link đổi (xem syncPreviewMusic).
+    syncPreviewMusic();
   }
 
   function tickCountdown() {
@@ -180,6 +183,7 @@
         }
         if (key === "slug") slugTouched = true;
         scheduleSave(); scheduleRender();
+        if (key === "musicUrl") syncPreviewMusic();
         if (["groomBank", "groomAccount", "groomAccountName", "brideBank", "brideAccount", "brideAccountName", "giftAmount", "giftNote"].indexOf(key) >= 0) renderQrPreview();
       });
     });
@@ -244,6 +248,127 @@
       var q = state.partyPlace ? (state.partyPlace + ", " + state.partyAddress) : state.partyAddress;
       mapFrame.src = q ? ExportLib.mapsEmbed(q) : "";
       mapFrame.style.display = q ? "" : "none";
+    }
+  }
+
+  /* ---------- nhạc nền: 1 audio dùng chung cho nút Nghe thử + nút ♪ trong preview ----------
+     Lỗi cũ: khung Live Preview không có thẻ <audio> nào (nút ♪ + audio chỉ tồn
+     tại trong file thiệp đã xuất), nên dán link MP3 vào Builder mà không nghe
+     được gì; nút "Nghe thử" thì dùng Audio riêng, đổi link khi đang phát cũng
+     không đổi bài, lỗi chỉ hiện bằng toast rồi mất. */
+  var previewAudioEl = null; // thẻ <audio> thật nằm trong khung preview (#previewFrame)
+  var previewMusicBtn = null; // nút ♪ nổi trong khung preview
+  var musicWasPlaying = false;
+
+  // Kiểm tra nhanh link nhạc: trả về chuỗi cảnh báo, hoặc null nếu link có vẻ ổn.
+  // Chỉ là gợi ý: link lạ vẫn cho bấm Nghe thử, lỗi thật sẽ hiện khi phát.
+  function validateMusicUrl(raw) {
+    var url = (raw || "").trim();
+    if (!url) return null;
+    if (/^http:\/\//i.test(url) && window.location.protocol === "https:") {
+      return "Link http:// sẽ bị chặn trên trang https:// — hãy dùng link https://.";
+    }
+    if (/(youtube\.com|youtu\.be|zingmp3\.vn|mp3\.zing\.vn|nhaccuatui\.com|soundcloud\.com|facebook\.com|tiktok\.com)/i.test(url)) {
+      return "Link này là trang web nghe nhạc, không phải file âm thanh trực tiếp — cần link file trực tiếp, ví dụ https://…/ten-bai.mp3.";
+    }
+    if (/drive\.google\.com/i.test(url) && !/export=download/i.test(url)) {
+      return "Link Google Drive dạng xem trang không phát được — cần link tải trực tiếp (…/uc?export=download&id=…).";
+    }
+    var path = url.split("?")[0].split("#")[0];
+    if (!/\.(mp3|m4a|aac|ogg|oga|wav|flac)$/i.test(path)) {
+      return "Link không phải file âm thanh trực tiếp (.mp3/.m4a) hoặc bị chặn quyền truy cập.";
+    }
+    return null;
+  }
+  function showMusicWarn(msg) {
+    var el = $("#musicWarn");
+    if (!el) return;
+    if (msg) { el.textContent = msg; el.hidden = false; }
+    else { el.textContent = ""; el.hidden = true; }
+  }
+  function syncMusicButtons() {
+    var playing = previewAudioEl && !previewAudioEl.paused;
+    var testBtn = $("#btnTestMusic");
+    if (testBtn) testBtn.textContent = playing ? "⏸ Dừng nghe thử" : "▶ Nghe thử nhạc";
+    if (previewMusicBtn) {
+      previewMusicBtn.textContent = playing ? "❚❚" : "♪";
+      previewMusicBtn.classList.toggle("playing", !!playing);
+    }
+  }
+  function ensurePreviewMusic() {
+    var frame = $("#previewFrame");
+    if (!frame) return null;
+    if (!previewAudioEl || !frame.contains(previewAudioEl)) {
+      previewAudioEl = document.createElement("audio");
+      previewAudioEl.setAttribute("data-preview-music", "");
+      previewAudioEl.loop = true;
+      previewAudioEl.preload = "metadata";
+      previewAudioEl.addEventListener("error", function () {
+        musicWasPlaying = false;
+        showMusicWarn("Không tải được file nhạc từ link này — kiểm tra lại link MP3.");
+        syncMusicButtons();
+      });
+      previewAudioEl.addEventListener("play", function () { musicWasPlaying = true; syncMusicButtons(); });
+      previewAudioEl.addEventListener("pause", function () { musicWasPlaying = false; syncMusicButtons(); });
+      frame.appendChild(previewAudioEl);
+    }
+    if (!previewMusicBtn || !frame.contains(previewMusicBtn)) {
+      previewMusicBtn = document.createElement("button");
+      previewMusicBtn.type = "button";
+      previewMusicBtn.className = "music-btn";
+      previewMusicBtn.setAttribute("data-preview-music-btn", "");
+      previewMusicBtn.setAttribute("aria-label", "Bật / tắt nhạc nền trong bản xem trước");
+      previewMusicBtn.textContent = "♪";
+      previewMusicBtn.style.position = "absolute";
+      previewMusicBtn.style.right = "14px";
+      previewMusicBtn.style.bottom = "16px";
+      previewMusicBtn.addEventListener("click", togglePreviewMusic);
+      frame.appendChild(previewMusicBtn);
+    }
+    return previewAudioEl;
+  }
+  // Gán lại src + load() mỗi khi link đổi; đang phát thì chuyển sang bài mới.
+  function syncPreviewMusic() {
+    var audio = ensurePreviewMusic();
+    if (!audio) return;
+    var url = (state.musicUrl || "").trim();
+    showMusicWarn(validateMusicUrl(url));
+    if (previewMusicBtn) previewMusicBtn.style.display = url ? "" : "none";
+    if (!url) {
+      if (!audio.paused) audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+      syncMusicButtons();
+      return;
+    }
+    if (audio.dataset.src !== url) {
+      var wasPlaying = !audio.paused;
+      audio.dataset.src = url;
+      audio.src = url;
+      audio.load();
+      if (wasPlaying) {
+        audio.play().then(syncMusicButtons).catch(function (err) {
+          showMusicWarn("Không phát được link nhạc này" + (err && err.name ? " (" + err.name + ")" : "") + " — kiểm tra lại link MP3.");
+          syncMusicButtons();
+        });
+      }
+    }
+    syncMusicButtons();
+  }
+  function togglePreviewMusic() {
+    var url = (state.musicUrl || "").trim();
+    if (!url) { toast("Chưa có link nhạc MP3."); return; }
+    var audio = ensurePreviewMusic();
+    if (!audio) return;
+    if (audio.paused) {
+      if (audio.dataset.src !== url) { audio.dataset.src = url; audio.src = url; audio.load(); }
+      audio.play().then(syncMusicButtons).catch(function (err) {
+        showMusicWarn("Không phát được link nhạc này" + (err && err.name ? " (" + err.name + ")" : "") + " — kiểm tra lại link MP3.");
+        syncMusicButtons();
+      });
+    } else {
+      audio.pause();
+      syncMusicButtons();
     }
   }
 
@@ -399,6 +524,14 @@
   // GitHub Pages đọc file này để biết tên miền riêng của site.
   // Lỗi ở bước này không làm hỏng lần xuất bản: link github.io vẫn dùng được.
   async function syncCname(owner, repo, branch, token, domain, push) {
+    // CNAME chỉ dùng cho tên miền riêng (vd thiepcuoionline.me). Không bao giờ
+    // ghi tên miền của nền tảng mirror (pages.dev / vercel.app / workers.dev /
+    // netlify.app / github.io) — GitHub Pages sẽ nhận đó làm tên miền riêng
+    // và làm hỏng site github.io.
+    if (/\.(pages\.dev|vercel\.app|workers\.dev|netlify\.app|github\.io)$/.test(domain)) {
+      push({ ok: false, text: "Không ghi file CNAME cho tên miền nền tảng (" + domain + ") — CNAME chỉ dùng cho tên miền riêng." });
+      return;
+    }
     try {
       var url = "https://api.github.com/repos/" + owner + "/" + repo + "/contents/CNAME?ref=" + encodeURIComponent(branch);
       var sha = null, current = "";
@@ -505,16 +638,20 @@
       push({ ok: true, text: "Đã đẩy file lên GitHub." });
 
       var autoDomain = effectiveDomain();
-      if (autoDomain) {
-        push({ text: "Đồng bộ file CNAME cho tên miền " + autoDomain + "…" });
-        await syncCname(owner, repo, branch, token, autoDomain, push);
+      // Chỉ đồng bộ CNAME cho tên miền riêng người dùng gõ tay (biến domain).
+      // Tên miền tự nhận diện (autoDomain) chỉ dùng để tạo link trả về: nếu
+      // Builder đang mở trên bản mirror thì autoDomain là hostname của mirror,
+      // ghi nó vào CNAME sẽ làm GitHub Pages nhận nhầm đó làm tên miền riêng.
+      if (domain) {
+        push({ text: "Đồng bộ file CNAME cho tên miền " + domain + "…" });
+        await syncCname(owner, repo, branch, token, domain, push);
       }
       var pagesUrl = autoDomain
         ? "https://" + autoDomain + "/khach-hang/" + slug + "/"
         : "https://" + owner + ".github.io/" + repo + "/khach-hang/" + slug + "/";
       var fileUrl = putJson.content ? putJson.content.html_url : ("https://github.com/" + owner + "/" + repo + "/blob/" + branch + "/" + path);
       push({ ok: true, text: "Xong! Link thiệp: " + pagesUrl });
-      var domainNote = autoDomain
+      var domainNote = domain
         ? "<br>Tên miền riêng: DNS phải trỏ về GitHub Pages thì link mới mở được (xem docs/CUSTOM-DOMAIN.md). Sau khi DNS nhận, bật Enforce HTTPS ở repo Settings → Pages để GitHub cấp chứng chỉ."
         : "";
       setStatus(statusEl, "ok", "Đã xuất bản thành công. GitHub Pages cần 1–2 phút để cập nhật lần đầu.<br>" +
@@ -607,24 +744,11 @@
 
     // Nhạc nền — nghe thử. QUAN TRỌNG: Safari iOS / Chrome Android bắt buộc
     // phải có tương tác chạm mới cho phát tiếng, nên KHÔNG autoplay. Lần bấm
-    // này chính là lần chạm đó; nếu play() bị reject (vd NotAllowedError)
-    // thì nút quay về "Nghe thử" và báo rõ, không báo phát thành công giả.
+    // này chính là lần chạm đó; nút dùng chung 1 audio với nút ♪ trong khung
+    // preview (xem togglePreviewMusic), lỗi phát sẽ hiện cảnh báo ngay dưới
+    // ô nhập link thay vì chỉ toast rồi mất.
     var musicTest = $("#btnTestMusic");
-    var musicAudio = null;
-    if (musicTest) musicTest.addEventListener("click", function () {
-      if (!state.musicUrl) { toast("Chưa có link nhạc MP3."); return; }
-      if (!musicAudio) musicAudio = new Audio();
-      if (musicAudio.paused) {
-        musicAudio.src = state.musicUrl;
-        musicAudio.play().then(function () { musicTest.textContent = "⏸ Dừng nghe thử"; })
-          .catch(function (err) {
-            musicTest.textContent = "▶ Nghe thử nhạc";
-            toast("Không phát được link nhạc này" + (err && err.name ? " (" + err.name + ")" : "") + " — kiểm tra lại link MP3.");
-          });
-      } else {
-        musicAudio.pause(); musicTest.textContent = "▶ Nghe thử nhạc";
-      }
-    });
+    if (musicTest) musicTest.addEventListener("click", togglePreviewMusic);
 
     // Nút dữ liệu mẫu / lưu / xóa
     var btnSample = $("#btnLoadSample");
