@@ -110,12 +110,12 @@
 
       <section class="bg-white rounded-2xl border border-stone-200 p-5">
         <h2 class="font-serif text-xl font-bold mb-1">7 · Mừng cưới &amp; QR VietQR</h2>
-        <p class="text-sm text-stone-500 mb-4">Nhập đủ Ngân hàng + Số TK + Tên chủ TK thì mã QR VietQR tự sinh. Kiểm tra kỹ số tài khoản trước khi công bố.</p>
+        <p class="text-sm text-stone-500 mb-4">Nhập Ngân hàng + Số TK thì mã QR VietQR tự sinh (tên chủ TK không bắt buộc). Kiểm tra kỹ số tài khoản trước khi công bố.</p>
         <h3 class="font-bold text-sm text-[#8c6b3e] mb-2">Tài khoản chú rể</h3>
         <div class="grid grid-cols-2 gap-3">
           <div class="field"><label>Ngân hàng</label><input data-bind="groomBank"></div>
           <div class="field"><label>Số tài khoản</label><input data-bind="groomAccount" inputmode="numeric"></div>
-          <div class="field col-span-2"><label>Chủ tài khoản (không dấu, như trên thẻ)</label><input data-bind="groomAccountName"></div>
+          <div class="field col-span-2"><label>Chủ tài khoản (không bắt buộc, không dấu như trên thẻ)</label><input data-bind="groomAccountName"></div>
         </div>
         <button type="button" data-copy-field="[data-bind='groomAccount']" class="text-sm font-semibold text-[#8c6b3e] underline">Sao chép STK chú rể</button>
         <div id="qrGroom" class="qr-preview mt-2"></div>
@@ -123,7 +123,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="field"><label>Ngân hàng</label><input data-bind="brideBank"></div>
           <div class="field"><label>Số tài khoản</label><input data-bind="brideAccount" inputmode="numeric"></div>
-          <div class="field col-span-2"><label>Chủ tài khoản (không dấu, như trên thẻ)</label><input data-bind="brideAccountName"></div>
+          <div class="field col-span-2"><label>Chủ tài khoản (không bắt buộc, không dấu như trên thẻ)</label><input data-bind="brideAccountName"></div>
         </div>
         <button type="button" data-copy-field="[data-bind='brideAccount']" class="text-sm font-semibold text-[#8c6b3e] underline">Sao chép STK cô dâu</button>
         <div id="qrBride" class="qr-preview mt-2"></div>
