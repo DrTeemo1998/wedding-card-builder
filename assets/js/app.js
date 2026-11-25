@@ -376,11 +376,63 @@
     }).join("") + "</ul>";
   }
 
+  /* ---------- tên miền tùy chỉnh (Custom Domain) ---------- */
+  function normalizeDomain(raw) {
+    var d = (raw || "").trim().toLowerCase();
+    d = d.replace(/^https?:\/\//, "").replace(/\/.*$/, "").split("?")[0].split("#")[0];
+    return d;
+  }
+  // Tự nhận diện tên miền đang mở Builder: dùng khi Builder chạy trên tên miền
+  // riêng hoặc bản mirror (pages.dev / vercel.app). Trên github.io hoặc mở file
+  // local thì trả "" để giữ link github.io mặc định.
+  function detectDomain() {
+    var h = (window.location && window.location.hostname) || "";
+    if (!h || h === "localhost" || h === "127.0.0.1") return "";
+    if (/\.github\.io$/.test(h)) return "";
+    return h.toLowerCase();
+  }
+  function effectiveDomain() {
+    var typed = normalizeDomain($("#ghDomain") ? $("#ghDomain").value : "");
+    return typed || detectDomain();
+  }
+  // Ghi / cập nhật file CNAME ở thư mục gốc của nhánh đang xuất bản.
+  // GitHub Pages đọc file này để biết tên miền riêng của site.
+  // Lỗi ở bước này không làm hỏng lần xuất bản: link github.io vẫn dùng được.
+  async function syncCname(owner, repo, branch, token, domain, push) {
+    try {
+      var url = "https://api.github.com/repos/" + owner + "/" + repo + "/contents/CNAME?ref=" + encodeURIComponent(branch);
+      var sha = null, current = "";
+      var getRes = await fetch(url, { headers: ghHeaders(token) });
+      if (getRes.status === 200) {
+        var existing = await getRes.json();
+        sha = existing.sha || null;
+        try { current = decodeURIComponent(escape(atob((existing.content || "").replace(/\n/g, "")))).trim(); } catch (e) {}
+      } else if (getRes.status !== 404) {
+        push({ ok: false, text: "Không đọc được file CNAME (" + getRes.status + ") — link github.io vẫn dùng được." });
+        return;
+      }
+      if (current === domain) { push({ ok: true, text: "File CNAME đã đúng tên miền — không cần ghi lại." }); return; }
+      var body = { message: "Cập nhật CNAME cho tên miền " + domain, content: utf8ToBase64(domain + "\n"), branch: branch };
+      if (sha) body.sha = sha;
+      var putRes = await fetch("https://api.github.com/repos/" + owner + "/" + repo + "/contents/CNAME", {
+        method: "PUT", headers: ghHeaders(token), body: JSON.stringify(body)
+      });
+      if (!putRes.ok) {
+        push({ ok: false, text: "Chưa ghi được file CNAME (" + putRes.status + ") — link github.io vẫn dùng được, kiểm tra lại quyền token." });
+        return;
+      }
+      push({ ok: true, text: "Đã ghi file CNAME (" + domain + ") ở thư mục gốc." });
+    } catch (e) {
+      push({ ok: false, text: "Lỗi khi ghi file CNAME — link github.io vẫn dùng được." });
+    }
+  }
+
   async function pushToGitHub() {
     var owner = $("#ghOwner").value.trim();
     var repo = $("#ghRepo").value.trim() || "wedding-card-builder";
     var branch = $("#ghBranch").value.trim() || "main";
     var token = $("#ghToken").value.trim();
+    var domain = normalizeDomain($("#ghDomain") ? $("#ghDomain").value : "");
     var saveToken = $("#ghSaveToken").checked;
     var statusEl = $("#ghStatus");
     var slug = slugOf(state);
@@ -400,7 +452,7 @@
       if (saveToken) { try { localStorage.setItem(GH_KEY, token); } catch (e) {} }
       else { try { localStorage.removeItem(GH_KEY); } catch (e) {} }
       try {
-        localStorage.setItem(GH_META_KEY, JSON.stringify({ owner: owner, repo: repo, branch: branch }));
+        localStorage.setItem(GH_META_KEY, JSON.stringify({ owner: owner, repo: repo, branch: branch, domain: domain }));
       } catch (e) {}
 
       push({ text: "Đóng gói thiệp thành 1 file HTML độc lập…" });
@@ -452,12 +504,22 @@
       var putJson = await putRes.json();
       push({ ok: true, text: "Đã đẩy file lên GitHub." });
 
-      var pagesUrl = "https://" + owner + ".github.io/" + repo + "/khach-hang/" + slug + "/";
+      var autoDomain = effectiveDomain();
+      if (autoDomain) {
+        push({ text: "Đồng bộ file CNAME cho tên miền " + autoDomain + "…" });
+        await syncCname(owner, repo, branch, token, autoDomain, push);
+      }
+      var pagesUrl = autoDomain
+        ? "https://" + autoDomain + "/khach-hang/" + slug + "/"
+        : "https://" + owner + ".github.io/" + repo + "/khach-hang/" + slug + "/";
       var fileUrl = putJson.content ? putJson.content.html_url : ("https://github.com/" + owner + "/" + repo + "/blob/" + branch + "/" + path);
       push({ ok: true, text: "Xong! Link thiệp: " + pagesUrl });
+      var domainNote = autoDomain
+        ? "<br>Tên miền riêng: DNS phải trỏ về GitHub Pages thì link mới mở được (xem docs/CUSTOM-DOMAIN.md). Sau khi DNS nhận, bật Enforce HTTPS ở repo Settings → Pages để GitHub cấp chứng chỉ."
+        : "";
       setStatus(statusEl, "ok", "Đã xuất bản thành công. GitHub Pages cần 1–2 phút để cập nhật lần đầu.<br>" +
         'Link thiệp: <a class="underline font-semibold" href="' + pagesUrl + '" target="_blank" rel="noopener">' + pagesUrl + "</a><br>" +
-        'File trên repo: <a class="underline" href="' + fileUrl + '" target="_blank" rel="noopener">' + fileUrl + "</a><br>" +
+        'File trên repo: <a class="underline" href="' + fileUrl + '" target="_blank" rel="noopener">' + fileUrl + "</a>" + domainNote + "<br>" +
         '<span class="block mt-2 p-2 rounded bg-amber-50 border border-amber-300 text-amber-800 text-sm">⚠ <b>Bảo mật token:</b> test xong hãy thu hồi token vừa dùng tại <a class="underline font-semibold" href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a> (bấm Revoke), hoặc giới hạn lại quyền của nó — và bấm nút “Xoá token” trong mục này để gỡ token khỏi máy này.</span>');
       var copyBtn = $("#btnCopyPages");
       if (copyBtn) {
@@ -597,6 +659,7 @@
       if (meta.owner) $("#ghOwner").value = meta.owner;
       if (meta.repo) $("#ghRepo").value = meta.repo;
       if (meta.branch) $("#ghBranch").value = meta.branch;
+      if (meta.domain) $("#ghDomain").value = meta.domain;
       var savedToken = localStorage.getItem(GH_KEY);
       if (savedToken) { $("#ghToken").value = savedToken; $("#ghSaveToken").checked = true; }
     } catch (e) {}
