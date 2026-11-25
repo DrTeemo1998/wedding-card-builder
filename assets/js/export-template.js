@@ -70,7 +70,7 @@
     return (state.weddingDate || "") + "T" + time + ":00";
   }
 
-  /* ---------- 5 template ---------- */
+  /* ---------- 15 template: 5 gốc + 10 phong cách Hàn Quốc ---------- */
   var TEMPLATES = {
     traditional: {
       id: "traditional", name: "Truyền thống đỏ vàng",
@@ -111,6 +111,116 @@
       heading: "Georgia, 'Times New Roman', serif",
       body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
       frame: "round"
+    },
+    /* --- 10 mẫu phong cách Hàn Quốc --- */
+    seoul: {
+      id: "seoul", name: "Seoul Minimalist (Tối giản Seoul)",
+      primary: "#2B2B2B", accent: "#B08D57", bg: "#FAF8F5", surface: "#FFFFFF",
+      ink: "#2B2B2B", muted: "#8A8378", line: "#E8E2D8", soft: "#F3EFE8",
+      heading: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "line",
+      css: ".inv .names{font-weight:500;letter-spacing:.02em}" +
+        ".inv .eyebrow{letter-spacing:.42em}" +
+        ".inv h2{font-weight:500}"
+    },
+    jeju: {
+      id: "jeju", name: "Jeju Lookbook (Tạp chí Ảnh cưới)",
+      primary: "#1F2937", accent: "#C08A5A", bg: "#FFFFFF", surface: "#F9FAFB",
+      ink: "#1F2937", muted: "#6B7280", line: "#E5E7EB", soft: "#F3F4F6",
+      heading: "'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "line",
+      css: ".inv .cover img{height:min(78vh,640px)}" +
+        ".inv .cover .veil{background:linear-gradient(transparent,rgba(0,0,0,.55) 85%);padding:120px 20px 18px}" +
+        ".inv .cover .names{color:#fff}" +
+        ".inv .cover .muted{color:#F3F4F6}" +
+        ".inv .cover .eyebrow{color:#E5E7EB}"
+    },
+    namsan: {
+      id: "namsan", name: "Namsan Blossom (Anh đào Namsan)",
+      primary: "#9D174D", accent: "#F472B6", bg: "#FDF2F4", surface: "#FFFFFF",
+      ink: "#4A2C3A", muted: "#9D6B7E", line: "#FBCFE8", soft: "#FCE7F3",
+      heading: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "round",
+      css: ".inv .cover img{border-radius:999px 999px 0 0}" +
+        ".inv .card{border-radius:20px}"
+    },
+    hanji: {
+      id: "hanji", name: "Hanji Warmth (Giấy Dó Hàn Quốc)",
+      primary: "#6B4A2B", accent: "#A97C50", bg: "#F5EFE3", surface: "#FFFBF2",
+      ink: "#3E2F23", muted: "#8A7561", line: "#E3D5BC", soft: "#EFE6D2",
+      heading: "Georgia, 'Times New Roman', serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "double",
+      css: ".inv{background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(107,74,43,.02) 3px,rgba(107,74,43,.02) 4px)}" +
+        ".inv .card{border-radius:6px}"
+    },
+    sage: {
+      id: "sage", name: "Sage & Linen (Xanh Bơ & Vải Lanh)",
+      primary: "#4D5E3A", accent: "#8A9A5B", bg: "#F4F1E6", surface: "#FFFFFF",
+      ink: "#2E3620", muted: "#7A7F63", line: "#DDE0C8", soft: "#EDEFE0",
+      heading: "'Cormorant Garamond', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "line",
+      css: ".inv .card{border-radius:16px}" +
+        ".inv .rule{width:40px}"
+    },
+    champagne: {
+      id: "champagne", name: "Champagne Silk (Lụa Champagne)",
+      primary: "#8A6D3B", accent: "#C9A86A", bg: "#FAF6EC", surface: "#FFFFFF",
+      ink: "#3A2F1D", muted: "#97835F", line: "#EADFC2", soft: "#F5EDD8",
+      heading: "'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "double",
+      css: ".inv .names{letter-spacing:.04em}" +
+        ".inv .card{box-shadow:0 2px 10px rgba(138,109,59,.08)}"
+    },
+    polaroid: {
+      id: "polaroid", name: "Polaroid Diary (Nhật ký Polaroid)",
+      primary: "#374151", accent: "#D97706", bg: "#FDFCF8", surface: "#FFFFFF",
+      ink: "#292524", muted: "#78716C", line: "#E7E5E4", soft: "#F5F5F4",
+      heading: "'Cormorant Garamond', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "line",
+      css: ".inv .album figure{background:#fff;padding:10px 10px 30px;box-shadow:0 4px 14px rgba(0,0,0,.14);transform:rotate(-2deg)}" +
+        ".inv .album figure:nth-child(even){transform:rotate(2deg)}" +
+        ".inv .album img{height:170px;border-radius:2px}" +
+        ".inv .album figcaption{font-family:'Great Vibes','Segoe Script',cursive;font-size:19px;color:#57534E;margin-top:8px}"
+    },
+    midnight: {
+      id: "midnight", name: "Midnight Candle (Tiệc tối Ánh nến)",
+      primary: "#E3C98F", accent: "#C9A86A", bg: "#211D1A", surface: "#2C2620",
+      ink: "#F3EDE3", muted: "#B4A894", line: "#4A4238", soft: "#332C25",
+      heading: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "line",
+      css: ".inv .btn{color:#211D1A}" +
+        ".inv .btn.ghost{color:#E3C98F}" +
+        ".inv .music-btn.playing{color:#211D1A}"
+    },
+    lavender: {
+      id: "lavender", name: "Lavender Mist (Sương tím Oải hương)",
+      primary: "#6D28D9", accent: "#A78BFA", bg: "#F5F3FA", surface: "#FFFFFF",
+      ink: "#3B2D4D", muted: "#8B7FA3", line: "#E4DFF2", soft: "#EDE9F7",
+      heading: "'Cormorant Garamond', 'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "round",
+      css: ".inv .card{border-radius:18px}" +
+        ".inv .count div{border-radius:16px}"
+    },
+    editorial: {
+      id: "editorial", name: "Modern Editorial (Nghệ thuật Chữ Hàn)",
+      primary: "#111111", accent: "#B45309", bg: "#FFFFFF", surface: "#FFFFFF",
+      ink: "#111111", muted: "#6B7280", line: "#E5E7EB", soft: "#F9FAFB",
+      heading: "'Cormorant Garamond', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "line",
+      css: ".inv .names{font-size:clamp(38px,11vw,60px);letter-spacing:-.01em;text-transform:uppercase}" +
+        ".inv h2{letter-spacing:.18em;text-transform:uppercase;font-size:18px}" +
+        ".inv .tl .dot{display:none}" +
+        ".inv .tl{border-left:2px solid #111;padding-left:14px}"
     }
   };
 
@@ -173,7 +283,7 @@
       ".inv .rsvp-status.err{background:#FEF2F2;border:1px solid #FCA5A5;color:#991B1B}",
       ".inv footer{padding:26px 22px 40px;text-align:center;color:" + t.muted + ";font-size:13px}",
       "@media (prefers-reduced-motion:reduce){.inv canvas.fx{display:none}}"
-    ].join("\n");
+    ].join("\n") + (t.css ? "\n" + t.css : "");
   }
 
   /* ---------- Nội dung thiệp (dùng chung preview + file xuất) ---------- */
@@ -357,6 +467,7 @@
       "if(CFG.musicUrl){\n" +
       "  /* KHONG autoplay co tieng: Safari iOS / Chrome Android chi cho phat tieng sau 1 lan cham — nhac chi phat khi khach cham nut. */\n" +
       "  var audio=document.createElement('audio'); audio.src=CFG.musicUrl; audio.loop=true; audio.preload='metadata';\n" +
+      "  audio.addEventListener('error',function(){ btn.classList.remove('playing'); btn.textContent='♪'; btn.title='Không tải được file nhạc từ link này — kiểm tra lại link MP3.'; });\n" +
       "  var btn=document.createElement('button'); btn.className='music-btn'; btn.type='button'; btn.textContent='♪';\n" +
       "  btn.setAttribute('aria-label','Bật / tắt nhạc nền — chạm để phát nhạc');\n" +
       "  btn.title='Chạm để bật nhạc (trình duyệt không cho tự phát nhạc có tiếng)';\n" +
@@ -456,6 +567,7 @@
       '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +
       "<title>" + esc(title) + "</title>\n" +
       '<meta name="description" content="' + escAttr("Thiệp cưới online của " + state.groomName + " & " + state.brideName + " — " + formatDateVi(state.weddingDate)) + '">\n' +
+      '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Cormorant+Garamond:wght@500;600&family=Great+Vibes&display=swap">\n' +
       "<style>\n" + templateCSS(t) + "\n</style>\n</head>\n<body>\n" +
       bodyHtml +
       "\n<script>\n" + standaloneJS(state) + "\n<\/script>\n</body>\n</html>\n";
