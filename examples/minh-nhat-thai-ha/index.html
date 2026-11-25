@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thiệp cưới Trần Minh Nhật &amp; Nguyễn Thái Hà — Chủ nhật, ngày 20 tháng 12 năm 2026</title>
+<meta name="description" content="Thiệp cưới online của Trần Minh Nhật &amp; Nguyễn Thái Hà — Chủ nhật, ngày 20 tháng 12 năm 2026">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui, -apple-system, 'Segoe UI', sans-serif;background:#FDFBF7;color:#2B2118;line-height:1.6}
+.inv{max-width:640px;margin:0 auto;background:#FDFBF7;position:relative;overflow:hidden}
+.inv canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.inv .cover{position:relative;text-align:center}
+.inv .cover img{width:100%;height:min(62vh,480px);object-fit:cover;display:block}
+.inv .cover .veil{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,#FDFBF7 88%);padding:70px 20px 8px}
+.inv .eyebrow{letter-spacing:.28em;text-transform:uppercase;font-size:11px;color:#7A6A58}
+.inv .names{font-family:'Playfair Display', Georgia, 'Times New Roman', serif;font-size:clamp(30px,8vw,44px);font-weight:700;line-height:1.15;color:#8C6B3E;margin:6px 0}
+.inv .names .amp{color:#C9A86A;font-style:italic}
+.inv section{padding:26px 22px 8px;text-align:center;position:relative;z-index:1}
+.inv h2{font-family:'Playfair Display', Georgia, 'Times New Roman', serif;font-size:24px;color:#8C6B3E;margin:0 0 6px}
+.inv .rule{width:56px;height:2px;background:#C9A86A;margin:12px auto}
+.inv .muted{color:#7A6A58;font-size:14px}
+.inv .card{border:3px double #C9A86A;background:#FFFFFF;border-radius:14px;padding:16px;margin:12px 0;text-align:left}
+.inv .card b{color:#8C6B3E}
+.inv .count{display:flex;gap:8px;justify-content:center;margin:14px 0 4px}
+.inv .count div{background:#F6EFE2;border:1px solid #E9DFCE;border-radius:12px;min-width:64px;padding:10px 4px}
+.inv .count b{display:block;font-size:24px;color:#8C6B3E;font-family:'Playfair Display', Georgia, 'Times New Roman', serif}
+.inv .count span{font-size:11px;color:#7A6A58}
+.inv .tl{display:flex;gap:12px;text-align:left;margin:14px 0;align-items:flex-start}
+.inv .tl .time{font-family:'Playfair Display', Georgia, 'Times New Roman', serif;font-weight:700;color:#8C6B3E;min-width:54px}
+.inv .tl .dot{width:11px;height:11px;border-radius:50%;background:#C9A86A;margin-top:6px;flex:none}
+.inv .story{text-align:left;border-left:2px solid #E9DFCE;margin:0 0 16px 6px;padding:0 0 4px 16px;position:relative}
+.inv .story:before{content:'';position:absolute;left:-6px;top:5px;width:10px;height:10px;border-radius:50%;background:#8C6B3E}
+.inv .story b{color:#8C6B3E}
+.inv .album{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.inv .album figure{margin:0}
+.inv .album img{width:100%;height:150px;object-fit:cover;border-radius:12px;display:block}
+.inv .album figcaption{font-size:12px;color:#7A6A58;margin-top:4px}
+.inv .qr{display:block;max-width:220px;width:100%;margin:10px auto 4px;border:1px solid #E9DFCE;border-radius:12px}
+.inv .bank{text-align:center}
+.inv .btn{display:inline-block;background:#8C6B3E;color:#fff;border:0;border-radius:999px;padding:11px 20px;font-weight:700;cursor:pointer;font-size:15px;text-decoration:none}
+.inv .btn.ghost{background:transparent;color:#8C6B3E;border:1px solid #8C6B3E}
+.inv .btn.small{padding:8px 14px;font-size:13px}
+.inv input,.inv select,.inv textarea{width:100%;border:1px solid #E9DFCE;border-radius:10px;padding:10px 12px;background:#FFFFFF;color:#2B2118;font:inherit;font-size:15px}
+.inv label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px;text-align:left}
+.inv .wish{background:#FFFFFF;border:1px solid #E9DFCE;border-radius:12px;padding:12px 14px;margin:10px 0;text-align:left}
+.inv .wish b{color:#8C6B3E}
+.inv .wish small{color:#7A6A58}
+.inv iframe.map{width:100%;height:260px;border:0;border-radius:12px;margin-top:10px}
+.inv .music-btn{position:fixed;right:14px;bottom:16px;z-index:10;width:48px;height:48px;border-radius:50%;border:1px solid #E9DFCE;background:#FFFFFF;color:#8C6B3E;font-size:20px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.inv .music-btn.playing{background:#8C6B3E;color:#fff}
+.inv .warn{background:#FEF3C7;border:1px solid #F59E0B;color:#92400E;border-radius:12px;padding:12px 14px;font-size:13px;text-align:left;margin:12px 0}
+.inv .rsvp-status{border-radius:12px;padding:12px 14px;font-size:14px;text-align:left;margin:12px 0;display:none}
+.inv .rsvp-status.show{display:block}
+.inv .rsvp-status.sending{background:#F6EFE2;border:1px solid #E9DFCE}
+.inv .rsvp-status.ok{background:#ECFDF5;border:1px solid #34D399;color:#065F46}
+.inv .rsvp-status.err{background:#FEF2F2;border:1px solid #FCA5A5;color:#991B1B}
+.inv footer{padding:26px 22px 40px;text-align:center;color:#7A6A58;font-size:13px}
+@media (prefers-reduced-motion:reduce){.inv canvas.fx{display:none}}
+</style>
+</head>
+<body>
+<div class="inv" data-slug="minh-nhat-thai-ha"><div class="warn"><b>DỮ LIỆU MẪU - CẦN XÁC NHẬN:</b> tên địa điểm tiệc "Nhà Hàng Crown Tiền Hải" chưa xác nhận 100% có phải Crown Palace hay không; số tài khoản cô dâu Vietcombank 376634531 chỉ có 9 chữ số, chưa xác thực. Vui lòng xác nhận với cô dâu chú rể trước khi gửi thiệp này cho khách mời.</div><canvas class="fx" id="fxCanvas" aria-hidden="true"></canvas><div class="cover"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&amp;q=80&amp;auto=format&amp;fit=crop" alt="Ảnh cưới Trần Minh Nhật &amp; Nguyễn Thái Hà"><div class="veil"><div class="eyebrow">Thiệp mời cưới</div><div class="names">Trần Minh Nhật <span class="amp">&amp;</span> Nguyễn Thái Hà</div><div class="muted">Chủ nhật, ngày 20 tháng 12 năm 2026</div></div></div><section><h2>Đếm ngược tới ngày cưới</h2><div class="rule"></div><div class="count" data-countdown data-target="2026-12-20T09:00:00"><div><b data-cd="d">--</b><span>Ngày</span></div><div><b data-cd="h">--</b><span>Giờ</span></div><div><b data-cd="m">--</b><span>Phút</span></div><div><b data-cd="s">--</b><span>Giây</span></div></div><p class="muted">Hạn xác nhận tham dự: Thứ năm, ngày 10 tháng 12 năm 2026</p></section><section><h2>Trân trọng kính mời</h2><div class="rule"></div><p>Trân trọng kính mời bạn cùng gia đình tới dự lễ thành hôn của chúng mình. Sự hiện diện của bạn là niềm hạnh phúc lớn nhất trong ngày trọng đại này.</p><div class="card"><b>Chú rể Trần Minh Nhật</b><br>Con ông Trần Minh A &amp; bà Trần Minh B<br>SĐT: <a href="tel:0967156341">0967156341</a></div><div class="card"><b>Cô dâu Nguyễn Thái Hà</b><br>Con ông Nguyễn Thái C &amp; bà Trần Thị D<br>SĐT: <a href="tel:0974565245">0974565245</a></div><p class="muted">Dress code: Trắng · Be · Vàng gold</p></section><section><h2>Thời gian &amp; Địa điểm</h2><div class="rule"></div><div class="card"><b>Lễ Vu Quy — 09:00</b><br>Tư gia Nhà Gái<br>Phố Hùng Thắng, Tiền Hải, Thái Bình<iframe class="map" loading="lazy" title="Bản đồ lễ Vu Quy" src="https://maps.google.com/maps?q=Ph%E1%BB%91%20H%C3%B9ng%20Th%E1%BA%AFng%2C%20Ti%E1%BB%81n%20H%E1%BA%A3i%2C%20Th%C3%A1i%20B%C3%ACnh&amp;output=embed"></iframe></div><div class="card"><b>Tiệc cưới — Đón khách 11:00 · Khai tiệc 11:30</b><br>Nhà Hàng Crown Tiền Hải<br>Tiền Hải, Thái Bình<iframe class="map" loading="lazy" title="Bản đồ tiệc cưới" src="https://maps.google.com/maps?q=Nh%C3%A0%20H%C3%A0ng%20Crown%20Ti%E1%BB%81n%20H%E1%BA%A3i%2C%20Ti%E1%BB%81n%20H%E1%BA%A3i%2C%20Th%C3%A1i%20B%C3%ACnh&amp;output=embed"></iframe></div></section><section><h2>Lịch trình ngày cưới</h2><div class="rule"></div><div class="tl"><span class="time">09:00</span><span class="dot"></span><div><b>Lễ Vu Quy</b><br><span class="muted">Làm lễ tại tư gia nhà gái</span></div></div><div class="tl"><span class="time">10:30</span><span class="dot"></span><div><b>Rước dâu</b><br><span class="muted">Đoàn nhà trai đón cô dâu về nhà hàng</span></div></div><div class="tl"><span class="time">11:00</span><span class="dot"></span><div><b>Đón khách</b><br><span class="muted">Đón khách &amp; chụp ảnh tại sảnh tiệc</span></div></div><div class="tl"><span class="time">11:30</span><span class="dot"></span><div><b>Khai tiệc</b><br><span class="muted">Làm lễ trên sân khấu &amp; khai tiệc</span></div></div><div class="tl"><span class="time">12:30</span><span class="dot"></span><div><b>Chụp ảnh cùng khách</b><br><span class="muted">Chụp ảnh lưu niệm với khách mời</span></div></div></section><section><h2>Câu chuyện tình yêu</h2><div class="rule"></div><div class="story"><small class="muted">Mùa thu 2021</small><br><b>Lần đầu gặp nhau</b><br>Gặp nhau lần đầu trong một buổi chiều thu.</div><div class="story"><small class="muted">14/02/2022</small><br><b>Chính thức yêu nhau</b><br>Ngày Valentine, hai người chính thức bắt đầu hành trình cùng nhau.</div><div class="story"><small class="muted">20/10/2025</small><br><b>Lời cầu hôn</b><br>Một lời cầu hôn giản dị và cái gật đầu hạnh phúc.</div><div class="story"><small class="muted">20/12/2026</small><br><b>Về chung một nhà</b><br>Ngày cưới — chương mới của câu chuyện bắt đầu.</div></section><section><h2>Album ảnh cưới</h2><div class="rule"></div><div class="album"><figure><img loading="lazy" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&amp;q=80&amp;auto=format&amp;fit=crop" alt="Ngày chung đôi"><figcaption>Ngày chung đôi</figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=900&amp;q=80&amp;auto=format&amp;fit=crop" alt="Khoảnh khắc yêu thương"><figcaption>Khoảnh khắc yêu thương</figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=900&amp;q=80&amp;auto=format&amp;fit=crop" alt="Nhẫn cưới"><figcaption>Nhẫn cưới</figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=900&amp;q=80&amp;auto=format&amp;fit=crop" alt="Cô dâu xinh đẹp"><figcaption>Cô dâu xinh đẹp</figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=900&amp;q=80&amp;auto=format&amp;fit=crop" alt="Nắm tay nhau"><figcaption>Nắm tay nhau</figcaption></figure><figure><img loading="lazy" src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=900&amp;q=80&amp;auto=format&amp;fit=crop" alt="Hạnh phúc trọn vẹn"><figcaption>Hạnh phúc trọn vẹn</figcaption></figure></div></section><section><h2>Mừng cưới</h2><div class="rule"></div><p class="muted">Quý khách ở xa có thể mừng cưới qua chuyển khoản — mã QR VietQR quét là ra đúng số tài khoản.</p><div class="card bank"><b>Chú rể — Vietcombank</b><br>Chủ TK: TRAN MINH NHAT<br>STK: <b data-stk="34098011949">34098011949</b> <button class="btn ghost small" type="button" data-copy-stk="34098011949">Sao chép STK</button><img class="qr" loading="lazy" src="https://img.vietqr.io/image/VCB-34098011949-compact2.png?amount=&amp;addInfo=M%E1%BB%ABng%20c%C6%B0%E1%BB%9Bi&amp;accountName=TRAN%20MINH%20NHAT" alt="Mã QR VietQR Chú rể"></div><div class="card bank"><b>Cô dâu — Vietcombank</b><br>Chủ TK: NGUYEN THAI HA<br>STK: <b data-stk="376634531">376634531</b> <button class="btn ghost small" type="button" data-copy-stk="376634531">Sao chép STK</button><img class="qr" loading="lazy" src="https://img.vietqr.io/image/VCB-376634531-compact2.png?amount=&amp;addInfo=M%E1%BB%ABng%20c%C6%B0%E1%BB%9Bi&amp;accountName=NGUYEN%20THAI%20HA" alt="Mã QR VietQR Cô dâu"></div></section><section><h2>Xác nhận tham dự (RSVP)</h2><div class="rule"></div><p class="muted">Vui lòng xác nhận trước ngày Thứ năm, ngày 10 tháng 12 năm 2026. Thông tin của bạn chỉ lưu trên trình duyệt này.</p><form data-rsvp-form><label for="rsvpName">Họ tên của bạn</label><input id="rsvpName" name="name" required autocomplete="name"><label for="rsvpPhone">Số điện thoại (không bắt buộc)</label><input id="rsvpPhone" name="phone" type="tel" autocomplete="tel"><label for="rsvpAttend">Bạn có tham dự không?</label><select id="rsvpAttend" name="attend"><option value="Tham dự">Tham dự</option><option value="Không tham dự được">Không tham dự được</option></select><label for="rsvpCount">Số người đi cùng</label><input id="rsvpCount" name="count" type="number" min="0" max="10" value="0"><label for="rsvpMsg">Lời chúc tới cô dâu chú rể</label><textarea id="rsvpMsg" name="message" rows="3"></textarea><button class="btn" type="submit" style="width:100%;margin-top:16px">Gửi xác nhận &amp; lời chúc</button></form><p class="rsvp-status" data-rsvp-status role="status"></p><div data-wish-list style="margin-top:18px"></div></section><footer>Thiệp cưới online của Trần Minh Nhật &amp; Nguyễn Thái Hà · Chủ nhật, ngày 20 tháng 12 năm 2026</footer></div>
+<script>
+(function(){
+var CFG={"slug":"minh-nhat-thai-ha","target":"2026-12-20T09:00:00","particlesEnabled":true,"particleType":"sakura","musicUrl":"","rsvp":{"mode":"local","appsScriptUrl":"","formspreeUrl":""}};
+var $=function(s,c){return (c||document).querySelector(s)};
+var $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+function pad(n){return String(n).padStart(2,'0')}
+function tick(){
+  var box=$('[data-countdown]'); if(!box) return;
+  var target=new Date(box.getAttribute('data-target'));
+  var diff=target-new Date();
+  if(diff<=0){ $$('[data-cd]',box).forEach(function(el){el.textContent='0'}); return; }
+  var d=Math.floor(diff/86400000), h=Math.floor(diff%86400000/3600000),
+      m=Math.floor(diff%3600000/60000), s=Math.floor(diff%60000/1000);
+  var map={d:d,h:pad(h),m:pad(m),s:pad(s)};
+  $$('[data-cd]',box).forEach(function(el){ el.textContent=map[el.getAttribute('data-cd')] });
+}
+tick(); setInterval(tick,1000);
+$$('[data-copy-stk]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var v=btn.getAttribute('data-copy-stk');
+    function done(){ btn.textContent='Đã sao chép'; setTimeout(function(){btn.textContent='Sao chép STK'},2000); }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(v).then(done); }
+    else { var ta=document.createElement('textarea'); ta.value=v; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); done();}catch(e){} ta.remove(); }
+  });
+});
+if(CFG.musicUrl){
+  /* KHONG autoplay co tieng: Safari iOS / Chrome Android chi cho phat tieng sau 1 lan cham — nhac chi phat khi khach cham nut. */
+  var audio=document.createElement('audio'); audio.src=CFG.musicUrl; audio.loop=true; audio.preload='metadata';
+  var btn=document.createElement('button'); btn.className='music-btn'; btn.type='button'; btn.textContent='♪';
+  btn.setAttribute('aria-label','Bật / tắt nhạc nền — chạm để phát nhạc');
+  btn.title='Chạm để bật nhạc (trình duyệt không cho tự phát nhạc có tiếng)';
+  btn.addEventListener('click',function(){
+    if(audio.paused){ audio.play().then(function(){btn.classList.add('playing');btn.textContent='❚❚';}).catch(function(err){ btn.classList.remove('playing'); btn.textContent='♪'; btn.title='Không phát được nhạc — kiểm tra lại link MP3 ('+(err&&err.name?err.name:'')+')'; }); }
+    else { audio.pause(); btn.classList.remove('playing'); btn.textContent='♪'; }
+  });
+  document.body.appendChild(btn);
+}
+var canvas=$('#fxCanvas');
+if(canvas && CFG.particlesEnabled && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  var ctx=canvas.getContext('2d');
+  var PAL={sakura:['#f9a8d4','#f472b6','#fbcfe8','#fda4af'],heart:['#ef4444','#f472b6','#fb7185','#e11d48'],snow:['#ffffff','#e0f2fe','#f8fafc'],glitter:['#facc15','#fde68a','#f59e0b','#fff7cc']};
+  var colors=PAL[CFG.particleType]||PAL.sakura;
+  var max=(window.innerWidth<=640||('ontouchstart' in window)||navigator.maxTouchPoints>0)?36:70, parts=[], W=0, H=0, raf=0, running=false;
+  function size(){ var r=canvas.parentElement.getBoundingClientRect(); W=r.width; H=r.height;
+    var d=Math.min(window.devicePixelRatio||1,2); canvas.width=W*d; canvas.height=H*d; ctx.setTransform(d,0,0,d,0,0); }
+  function mk(y){ return {x:Math.random()*W, y:(typeof y==='number'?y:-20-Math.random()*40), s:CFG.particleType==='glitter'?2+Math.random()*3.5:CFG.particleType==='snow'?2+Math.random()*4:6+Math.random()*9, vy:CFG.particleType==='heart'?0.35+Math.random()*0.7:0.5+Math.random()*1.1, vx:(Math.random()-0.5)*0.6, rot:Math.random()*6.28, rs:(Math.random()-0.5)*0.02, c:colors[Math.floor(Math.random()*colors.length)], a:0.55+Math.random()*0.45, tw:Math.random()*6.28}; }
+  function seed(){ size(); parts=[]; for(var i=0;i<max;i++) parts.push(mk(Math.random()*H)); }
+  function draw(){ ctx.clearRect(0,0,W,H); parts.forEach(function(p){ ctx.save(); ctx.globalAlpha=p.a; ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.c; if(CFG.particleType==='heart'){ var k=p.s/16; ctx.beginPath(); ctx.moveTo(0,5*k); ctx.bezierCurveTo(-9*k,-3*k,-4*k,-9*k,0,-4*k); ctx.bezierCurveTo(4*k,-9*k,9*k,-3*k,0,5*k); ctx.closePath(); ctx.fill(); } else if(CFG.particleType==='snow'){ ctx.beginPath(); ctx.arc(0,0,p.s/2,0,6.29); ctx.fill(); } else if(CFG.particleType==='glitter'){ ctx.beginPath(); ctx.moveTo(0,-p.s); ctx.quadraticCurveTo(0,0,p.s,0); ctx.quadraticCurveTo(0,0,0,p.s); ctx.quadraticCurveTo(0,0,-p.s,0); ctx.quadraticCurveTo(0,0,0,-p.s); ctx.closePath(); ctx.fill(); } else { ctx.beginPath(); ctx.ellipse(0,0,p.s/2,p.s/3.2,0,0,6.29); ctx.fill(); } ctx.restore(); }); }
+  function loop(){ if(!running) return; parts.forEach(function(p,i){ p.y+=p.vy; p.x+=p.vx+Math.sin(p.tw+=0.02)*0.4; p.rot+=p.rs; if(p.y>H+24){ parts[i]=mk(); } }); draw(); raf=requestAnimationFrame(loop); }
+  function start(){ if(running||document.hidden) return; running=true; raf=requestAnimationFrame(loop); }
+  function stop(){ running=false; cancelAnimationFrame(raf); ctx.clearRect(0,0,W,H); }
+  seed(); start();
+  var rzT=0;
+  window.addEventListener('resize',function(){ clearTimeout(rzT); rzT=setTimeout(function(){ var m=(window.innerWidth<=640||('ontouchstart' in window)||navigator.maxTouchPoints>0)?36:70; if(m!==max){ max=m; } seed(); },200); });
+  document.addEventListener('visibilitychange',function(){ document.hidden?stop():start(); });
+}
+var KEY='wedding-rsvp-'+CFG.slug;
+function escH(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function loadWishes(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }
+function saveWish(w){ var list=loadWishes(); list.unshift(w); try{ localStorage.setItem(KEY, JSON.stringify(list)); }catch(e){} }
+function renderWishes(){ var box=$('[data-wish-list]'); if(!box) return; var list=loadWishes();
+  if(!list.length){ box.innerHTML=''; return; }
+  box.innerHTML='<h3 style="font-size:18px">Lời chúc đã gửi</h3>'+list.map(function(w){ return '<div class="wish"><b>'+escH(w.name)+'</b> <small>· '+escH(w.attend)+(w.count>0?' · '+w.count+' người đi cùng':'')+'</small><br>'+escH(w.message)+'</div>'; }).join('');
+}
+function rsvpStatus(kind,msg){ var el=$('[data-rsvp-status]'); if(!el) return; el.className='rsvp-status show '+kind; el.textContent=msg; }
+function sendRsvp(w){
+  var mode=(CFG.rsvp&&CFG.rsvp.mode)||'local';
+  if(mode==='apps-script'){
+    var url=CFG.rsvp.appsScriptUrl||'';
+    if(!url) return Promise.resolve({ok:false, unconfigured:true});
+    var body={name:w.name, phone:w.phone||'', attending:w.attend, guests:w.count, wish:w.message, ten:w.name, thamDu:w.attend, soKhach:w.count, loiChuc:w.message, thoiGian:w.at};
+    return fetch(url,{method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(body)}).then(function(){ return {ok:true, note:'sheet'}; });
+  }
+  if(mode==='formspree'){
+    var furl=CFG.rsvp.formspreeUrl||'';
+    if(!furl) return Promise.resolve({ok:false, unconfigured:true});
+    return fetch(furl,{method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify({name:w.name, phone:w.phone||'', attending:w.attend, guests:w.count, message:w.message, _subject:'RSVP thiep cuoi '+CFG.slug})}).then(function(res){ return {ok:res.ok}; });
+  }
+  return Promise.resolve({ok:true, localOnly:true});
+}
+var form=$('[data-rsvp-form]');
+if(form){ form.addEventListener('submit',function(ev){ ev.preventDefault();
+  var name=form.name.value.trim(); if(!name){ form.name.focus(); return; }
+  var w={name:name, phone:(form.phone?form.phone.value.trim():''), attend:form.attend.value, count:+form.count.value||0, message:form.message.value.trim(), at:new Date().toISOString()};
+  var b=form.querySelector('button[type=submit]'); b.disabled=true; b.textContent='Đang gửi…';
+  rsvpStatus('sending','Đang gửi lời chúc…');
+  sendRsvp(w).then(function(r){
+    saveWish(w); form.reset(); renderWishes(); b.disabled=false; b.textContent='Gửi xác nhận & lời chúc';
+    if(r.unconfigured){ rsvpStatus('err','Chưa cấu hình nơi nhận RSVP — lời chúc chỉ lưu trên máy này. Cô dâu chú rể hãy dán Apps Script URL / Formspree trong Builder rồi xuất lại thiệp.'); }
+    else if(r.ok && r.note==='sheet'){ rsvpStatus('ok','Đã gửi — lời chúc đang được ghi vào Google Sheet của cô dâu chú rể. Cảm ơn bạn!'); }
+    else if(r.ok && r.localOnly){ rsvpStatus('ok','Đã lưu lời chúc trên máy này. Cảm ơn bạn!'); }
+    else if(r.ok){ rsvpStatus('ok','Đã nhận lời chúc của bạn. Cảm ơn bạn!'); }
+    else { rsvpStatus('err','Gửi chưa thành công — lời chúc đã lưu tạm trên máy này, bạn hãy thử gửi lại sau.'); }
+  }).catch(function(){
+    saveWish(w); form.reset(); renderWishes(); b.disabled=false; b.textContent='Gửi xác nhận & lời chúc';
+    rsvpStatus('err','Lỗi mạng — chưa gửi được tới cô dâu chú rể. Lời chúc đã lưu tạm trên máy này, bạn hãy thử gửi lại sau.');
+  });
+}); }
+renderWishes();
+})();
+</script>
+</body>
+</html>
