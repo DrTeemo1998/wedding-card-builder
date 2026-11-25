@@ -47,7 +47,7 @@ python3 -m http.server 8000
    hoặc nhập dữ liệu khách mới từ đầu.
 2. Soạn ở cột trái (desktop) hoặc tab **Soạn thiệp** (mobile) — cột phải xem trước
    trực tiếp, chuyển được khung Mobile 390px / Desktop.
-3. Chọn 1 trong 15 template, bật/tắt và đổi loại hiệu ứng hạt rơi:
+3. Chọn 1 trong 20 template, bật/tắt và đổi loại hiệu ứng hạt rơi:
    - Truyền thống đỏ vàng
    - Hiện đại tối giản
    - Sang trọng cổ điển
@@ -159,7 +159,7 @@ wedding-card-builder/
 │   └── js/
 │       ├── app.js              # State, render preview, GitHub push
 │       ├── particles.js        # Particle Engine Canvas
-│       ├── export-template.js  # buildStandaloneHTML(state) + 15 template
+│       ├── export-template.js  # buildStandaloneHTML(state) + 20 template
 │       └── sample-data.js      # Dữ liệu mẫu Minh Nhật & Thái Hà
 ├── examples/minh-nhat-thai-ha/index.html   # Thiệp mẫu đã xuất
 ├── khach-hang/minh-nhat-thai-ha/index.html # Bản sao — đúng đường dẫn push GitHub
