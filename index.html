@@ -6,6 +6,7 @@
 <title>Wedding Card Builder — Tạo thiệp cưới online</title>
 <meta name="description" content="Admin Builder tạo thiệp cưới online: nhập liệu, xem trước trực tiếp, xuất file HTML độc lập hoặc đẩy lên GitHub Pages cho khách.">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Cormorant+Garamond:wght@500;600&family=Great+Vibes&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
 <style id="previewStyle"></style>
 </head>
@@ -108,8 +109,9 @@
 
       <section class="bg-white rounded-2xl border border-stone-200 p-5">
         <h2 class="font-serif text-xl font-bold mb-1">6 · Nhạc nền MP3</h2>
-        <p class="text-sm text-stone-500 mb-4">Dán link file MP3 trực tiếp. Trên mobile, nhạc chỉ phát sau khi khách chạm nút ♪ (quy tắc autoplay của trình duyệt).</p>
-        <div class="field"><label>Link nhạc MP3</label><input data-bind="musicUrl" type="url"></div>
+        <p class="text-sm text-stone-500 mb-4">Dán link file MP3 trực tiếp (dạng https://…/ten-bai.mp3). Link YouTube, ZingMP3 hay Google Drive dạng xem trang sẽ không phát được. Trên mobile, nhạc chỉ phát sau khi khách chạm nút ♪ (quy tắc autoplay của trình duyệt).</p>
+        <div class="field"><label>Link nhạc MP3</label><input data-bind="musicUrl" type="url" placeholder="https://…/ten-bai.mp3"></div>
+        <p id="musicWarn" class="text-xs mt-2" style="color:#B91C1C" hidden></p>
         <button id="btnTestMusic" type="button" class="px-4 py-2 rounded-full border border-stone-300 text-sm font-semibold">▶ Nghe thử nhạc</button>
       </section>
 
