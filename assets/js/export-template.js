@@ -31,24 +31,46 @@
     return coupleSlug(state);
   }
   function bankCode(name) {
-    var n = String(name || "").toLowerCase().replace(/\s+/g, "");
+    /* Chuẩn hoá tên ngân hàng do người dùng gõ tay: bỏ dấu tiếng Việt, bỏ
+       tiền tố "Ngân hàng", rồi tra bảng mã VietQR. Trước đây gõ "Ngân hàng
+       Vietcombank" sẽ sinh mã NGANHANGVIETCOMBANK → img.vietqr.io trả 404
+       nên ảnh QR vỡ và không hiển thị. */
+    var n = String(name || "").normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .toLowerCase().replace(/đ/g, "d").replace(/[^a-z0-9]/g, "");
+    n = n.replace(/^(nganhang|nh|nganhangthuongmai)/, "");
     var map = {
-      vietcombank: "VCB", bidv: "BIDV", vietinbank: "CTG", agribank: "AGRIBANK",
-      techcombank: "TCB", mb: "MBBANK", mbbank: "MBBANK", acb: "ACB",
-      vpbank: "VPB", tpbank: "TPB", sacombank: "STB", vib: "VIB",
-      shinhan: "SHBVN", seabank: "SEABANK", hdbank: "HDBANK",
-      eximbank: "EIB", ocb: "OCB", msb: "MSB", vietcapitalbank: "VCCB"
+      vietcombank: "VCB", vcb: "VCB", ngoaithuong: "VCB", bidv: "BIDV", dautu: "BIDV",
+      vietinbank: "ICB", ctg: "ICB", congthuong: "ICB",
+      agribank: "AGRIBANK", nongnghiep: "AGRIBANK",
+      techcombank: "TCB", tcb: "TCB", kythuong: "TCB", mb: "MB", mbbank: "MB", quandoi: "MB",
+      acb: "ACB", vpbank: "VPB", vpb: "VPB", tpbank: "TPB", tpb: "TPB",
+      sacombank: "STB", stb: "STB", saigonthuongtin: "STB", vib: "VIB", shinhan: "SHBVN",
+      seabank: "SEAB", dongnama: "SEAB", hdbank: "HDB", eximbank: "EIB", ocb: "OCB",
+      msb: "MSB", hanghai: "MSB", vietcapitalbank: "VCCB", lpbank: "LPBANK", lienvietpostbank: "LPBANK",
+      namabank: "NAB", baovietbank: "BVB", kienlongbank: "KLB", vietabank: "VAB",
+      gpbank: "GPB", pvcombank: "PVCB", saigonbank: "SCB", saigon: "SCB",
+      bacabank: "BAB", ncb: "NCB", vietbank: "VIETBANK", abbank: "ABB",
+      pgbank: "PGB", vrbank: "VRB", cbbank: "CBB",
+      woori: "WVN", uob: "UOB", hsbc: "HSBC", standardchartered: "SCVN", citibank: "CITIBANK"
     };
     if (map[n]) return map[n];
-    return String(name || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "") || "VCB";
+    /* Gõ tên đầy đủ, ví dụ "Ngân hàng TMCP Ngoại thương Việt Nam" — tìm
+       mã theo từ khoá dài nhất xuất hiện trong tên đã chuẩn hoá. */
+    var keys = Object.keys(map).sort(function (a, b) { return b.length - a.length; });
+    for (var i = 0; i < keys.length; i++) {
+      if (n.indexOf(keys[i]) >= 0) return map[keys[i]];
+    }
+    return n.toUpperCase() || "VCB";
   }
   function vietqrUrl(bank, account, accountName, amount, addInfo) {
-    if (!bank || !account || !accountName) return "";
+    /* Chỉ cần Ngân hàng + Số TK là sinh được QR — tên chủ TK không bắt buộc
+       (img.vietqr.io vẫn trả ảnh 200 khi thiếu accountName). */
+    if (!bank || !account) return "";
     var code = bankCode(bank);
     var acc = String(account).replace(/\s+/g, "");
     var q = "?amount=" + encodeURIComponent(amount || "");
     q += "&addInfo=" + encodeURIComponent(addInfo || "");
-    q += "&accountName=" + encodeURIComponent(accountName);
+    if (accountName) q += "&accountName=" + encodeURIComponent(accountName);
     return "https://img.vietqr.io/image/" + code + "-" + acc + "-compact2.png" + q;
   }
   function mapsEmbed(query) {
@@ -70,7 +92,7 @@
     return (state.weddingDate || "") + "T" + time + ":00";
   }
 
-  /* ---------- 15 template: 5 gốc + 10 phong cách Hàn Quốc ---------- */
+  /* ---------- 20 template: 5 gốc + 10 phong cách Hàn Quốc + 5 đa dạng ---------- */
   var TEMPLATES = {
     traditional: {
       id: "traditional", name: "Truyền thống đỏ vàng",
@@ -221,6 +243,59 @@
         ".inv h2{letter-spacing:.18em;text-transform:uppercase;font-size:18px}" +
         ".inv .tl .dot{display:none}" +
         ".inv .tl{border-left:2px solid #111;padding-left:14px}"
+    },
+    /* --- 5 mẫu đa dạng màu sắc & phong cách --- */
+    ocean: {
+      id: "ocean", name: "Biển Xanh (Địa Trung Hải)",
+      primary: "#0369A1", accent: "#06B6D4", bg: "#F0F9FF", surface: "#FFFFFF",
+      ink: "#0C2D48", muted: "#5B7A99", line: "#BAE6FD", soft: "#E0F2FE",
+      heading: "'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "round",
+      css: ".inv .cover img{border-radius:0 0 24px 24px}" +
+        ".inv .card{box-shadow:0 2px 12px rgba(3,105,161,.10)}"
+    },
+    forest: {
+      id: "forest", name: "Rừng Thông (Xanh Lá Đậm)",
+      primary: "#14532D", accent: "#A16207", bg: "#F2F7F0", surface: "#FFFFFF",
+      ink: "#14261A", muted: "#6B7F6E", line: "#D1E7D6", soft: "#E6F2E8",
+      heading: "Georgia, 'Times New Roman', serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "double",
+      css: ".inv .card{border-radius:10px}" +
+        ".inv .rule{width:56px;border-top-width:2px}"
+    },
+    sunset: {
+      id: "sunset", name: "Hoàng Hôn (Nắng Chiều)",
+      primary: "#C2410C", accent: "#F59E0B", bg: "#FDF3E7", surface: "#FFFDF8",
+      ink: "#431407", muted: "#9A6B4F", line: "#FED7AA", soft: "#FFEDD5",
+      heading: "'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "round",
+      css: ".inv .cover .veil{background:linear-gradient(transparent,rgba(194,65,12,.45) 85%);padding:120px 20px 18px}" +
+        ".inv .cover .names{color:#fff}" +
+        ".inv .cover .muted{color:#FFEDD5}" +
+        ".inv .cover .eyebrow{color:#FED7AA}"
+    },
+    emerald: {
+      id: "emerald", name: "Ngọc Lục Bảo (Emerald & Vàng)",
+      primary: "#065F46", accent: "#B45309", bg: "#ECFDF5", surface: "#FFFFFF",
+      ink: "#022C22", muted: "#5F7A6E", line: "#A7F3D0", soft: "#D1FAE5",
+      heading: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "double",
+      css: ".inv .names{letter-spacing:.03em}" +
+        ".inv .rule{border-top-color:#B45309}"
+    },
+    navy: {
+      id: "navy", name: "Navy & Vàng Gold (Sang Trọng)",
+      primary: "#1E3A5F", accent: "#B45309", bg: "#EFF6FF", surface: "#FFFFFF",
+      ink: "#0F2440", muted: "#64748B", line: "#BFDBFE", soft: "#DBEAFE",
+      heading: "'Playfair Display', Georgia, serif",
+      body: "system-ui, -apple-system, 'Segoe UI', sans-serif",
+      frame: "line",
+      css: ".inv .cover img{height:min(62vh,520px)}" +
+        ".inv .card{border:1px solid #DBEAFE}"
     }
   };
 
@@ -379,7 +454,7 @@
       var rsvpIntro = "Vui lòng xác nhận trước ngày " + esc(formatDateVi(state.rsvpDeadline)) + ".";
       var rsvpWarn = "";
       if (rsvpMode === "apps-script") {
-        if (rsvpCfg.appsScriptUrl) rsvpIntro += " Lời chúc của bạn sẽ được gửi về Google Sheet của cô dâu chú rể.";
+        if (rsvpCfg.appsScriptUrl) rsvpIntro += " Lời chúc của bạn sẽ được gửi về Google Sheet của cô dâu chú rể và hiện trên thiệp này cho mọi người cùng xem.";
         else rsvpWarn = '<div class="warn"><b>Chưa cấu hình nơi nhận RSVP:</b> lời chúc của bạn tạm thời chỉ lưu trên máy này. Cô dâu chú rể vui lòng dán Apps Script URL trong Builder rồi xuất lại thiệp.</div>';
       } else if (rsvpMode === "formspree") {
         if (rsvpCfg.formspreeUrl) rsvpIntro += " Lời chúc của bạn sẽ được gửi tới cô dâu chú rể.";
@@ -410,13 +485,13 @@
 
   function giftBlock(state, who) {
     var bank = state[who + "Bank"], acc = state[who + "Account"], name = state[who + "AccountName"];
-    if (!bank || !acc || !name) return "";
+    if (!bank || !acc) return "";
     var label = who === "groom" ? "Chú rể" : "Cô dâu";
     var qr = vietqrUrl(bank, acc, name, state.giftAmount, state.giftNote || "Mung cuoi");
     var html = '<div class="card bank"><b>' + label + " — " + esc(bank) + "</b><br>" +
-      "Chủ TK: " + esc(name) + "<br>STK: <b data-stk=\"" + escAttr(acc) + "\">" + esc(acc) + "</b> " +
+      (name ? "Chủ TK: " + esc(name) + "<br>" : "") + "STK: <b data-stk=\"" + escAttr(acc) + "\">" + esc(acc) + "</b> " +
       '<button class="btn ghost small" type="button" data-copy-stk="' + escAttr(acc) + '">Sao chép STK</button>';
-    if (qr) html += '<img class="qr" loading="lazy" src="' + escAttr(qr) + '" alt="Mã QR VietQR ' + escAttr(label) + '">';
+    if (qr) html += '<img class="qr" loading="lazy" src="' + escAttr(qr) + '" alt="Mã QR VietQR ' + escAttr(label) + '" onerror="this.style.display=\'none\'">';
     html += "</div>";
     return html;
   }
@@ -512,6 +587,9 @@
       "function escH(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;'); }\n" +
       "function loadWishes(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch(e){ return []; } }\n" +
       "function saveWish(w){ var list=loadWishes(); list.unshift(w); try{ localStorage.setItem(KEY, JSON.stringify(list)); }catch(e){} }\n" +
+      "function saveWishes(list){ try{ localStorage.setItem(KEY, JSON.stringify(list.slice(0,200))); }catch(e){} }\n" +
+      "function mergeWishes(server){ var list=loadWishes(); var seen={}; list.forEach(function(w){ seen[(w.name||'')+'|'+(w.message||'')]=1; }); (server||[]).forEach(function(w){ var k=(w.name||'')+'|'+(w.message||''); if(!seen[k]){ seen[k]=1; list.push({name:w.name||'', attend:w.attend||'', count:+w.count||0, message:w.message||'', at:w.at||''}); } }); list.sort(function(a,b){ return String(b.at||'').localeCompare(String(a.at||'')); }); saveWishes(list); renderWishes(); }\n" +
+      "function loadServerWishes(){ var mode=(CFG.rsvp&&CFG.rsvp.mode)||'local'; if(mode!=='apps-script') return; var url=(CFG.rsvp&&CFG.rsvp.appsScriptUrl)||''; if(!url) return; window.__wcbWishes=function(data){ try{ if(data&&data.wishes) mergeWishes(data.wishes); }catch(e){} var s=document.getElementById('wcb-wishes-jsonp'); if(s&&s.parentNode) s.parentNode.removeChild(s); }; var s=document.createElement('script'); s.id='wcb-wishes-jsonp'; s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback=__wcbWishes'; s.onerror=function(){ if(s.parentNode) s.parentNode.removeChild(s); }; document.head.appendChild(s); setTimeout(function(){ var t=document.getElementById('wcb-wishes-jsonp'); if(t&&t.parentNode) t.parentNode.removeChild(t); }, 8000); }\n" +
       "function renderWishes(){ var box=$('[data-wish-list]'); if(!box) return; var list=loadWishes();\n" +
       "  if(!list.length){ box.innerHTML=''; return; }\n" +
       "  box.innerHTML='<h3 style=\"font-size:18px\">Lời chúc đã gửi</h3>'+list.map(function(w){ return '<div class=\"wish\"><b>'+escH(w.name)+'</b> <small>· '+escH(w.attend)+(w.count>0?' · '+w.count+' người đi cùng':'')+'</small><br>'+escH(w.message)+'</div>'; }).join('');\n" +
@@ -541,7 +619,7 @@
       "  sendRsvp(w).then(function(r){\n" +
       "    saveWish(w); form.reset(); renderWishes(); b.disabled=false; b.textContent='Gửi xác nhận & lời chúc';\n" +
       "    if(r.unconfigured){ rsvpStatus('err','Chưa cấu hình nơi nhận RSVP — lời chúc chỉ lưu trên máy này. Cô dâu chú rể hãy dán Apps Script URL / Formspree trong Builder rồi xuất lại thiệp.'); }\n" +
-      "    else if(r.ok && r.note==='sheet'){ rsvpStatus('ok','Đã gửi — lời chúc đang được ghi vào Google Sheet của cô dâu chú rể. Cảm ơn bạn!'); }\n" +
+      "    else if(r.ok && r.note==='sheet'){ rsvpStatus('ok','Đã gửi — lời chúc đang được ghi vào Google Sheet và sẽ hiện trên thiệp cho mọi người cùng xem. Cảm ơn bạn!'); }\n" +
       "    else if(r.ok && r.localOnly){ rsvpStatus('ok','Đã lưu lời chúc trên máy này. Cảm ơn bạn!'); }\n" +
       "    else if(r.ok){ rsvpStatus('ok','Đã nhận lời chúc của bạn. Cảm ơn bạn!'); }\n" +
       "    else { rsvpStatus('err','Gửi chưa thành công — lời chúc đã lưu tạm trên máy này, bạn hãy thử gửi lại sau.'); }\n" +
@@ -550,7 +628,7 @@
       "    rsvpStatus('err','Lỗi mạng — chưa gửi được tới cô dâu chú rể. Lời chúc đã lưu tạm trên máy này, bạn hãy thử gửi lại sau.');\n" +
       "  });\n" +
       "}); }\n" +
-      "renderWishes();\n" +
+      "loadServerWishes(); renderWishes();\n" +
       "})();";
   }
 
