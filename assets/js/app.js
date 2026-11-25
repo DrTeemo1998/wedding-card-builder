@@ -758,7 +758,7 @@
       try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
       bindSimple(); syncRsvpUI(); renderTemplatePicker(); renderParticleControls();
       renderQrPreview(); renderAllLists(); renderPreview();
-      toast("Đã nạp dữ liệu mẫu Minh Nhật & Thái Hà (DỮ LIỆU MẪU - CẦN XÁC NHẬN).");
+      toast("Đã nạp dữ liệu mẫu Minh Nhật & Thái Hà.");
     });
     var btnClear = $("#btnClear");
     if (btnClear) btnClear.addEventListener("click", function () {
