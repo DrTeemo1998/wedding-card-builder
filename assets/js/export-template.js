@@ -557,12 +557,7 @@
   function buildStandaloneHTML(state) {
     var t = TEMPLATES[state.template] || TEMPLATES.classic;
     var title = "Thiệp cưới " + state.groomName + " & " + state.brideName + " — " + formatDateVi(state.weddingDate);
-    var warn = "";
-    if (state.slug === "minh-nhat-thai-ha") {
-      warn = '<div class="warn"><b>DỮ LIỆU MẪU - CẦN XÁC NHẬN:</b> tên địa điểm tiệc "Nhà Hàng Crown Tiền Hải" chưa xác nhận 100% có phải Crown Palace hay không; số tài khoản cô dâu Vietcombank 376634531 chỉ có 9 chữ số, chưa xác thực. Vui lòng xác nhận với cô dâu chú rể trước khi gửi thiệp này cho khách mời.</div>';
-    }
     var bodyHtml = renderCardHTML(state);
-    if (warn) bodyHtml = bodyHtml.replace(/^(<div class="inv"[^>]*>)/, "$1" + warn);
     return "<!doctype html>\n<html lang=\"vi\">\n<head>\n<meta charset=\"utf-8\">\n" +
       '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' +
       "<title>" + esc(title) + "</title>\n" +
