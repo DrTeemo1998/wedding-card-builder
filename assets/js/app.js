@@ -444,6 +444,7 @@
         var msg = (errJson && errJson.message) || ("HTTP " + putRes.status);
         if (putRes.status === 401) msg = "Token sai hoặc hết hạn (401).";
         if (putRes.status === 404) msg = "Repo hoặc nhánh không tồn tại (404) — kiểm tra Owner / Repo / Branch.";
+        if (putRes.status === 409) msg = "Xung đột SHA (409) — file vừa bị đổi trên repo sau lúc kiểm tra, bấm Xuất bản lại để lấy sha mới.";
         if (putRes.status === 422) msg = "Dữ liệu không hợp lệ (422): " + msg;
         push({ ok: false, text: "Đẩy file thất bại: " + msg });
         throw new Error("put-failed");
@@ -456,7 +457,8 @@
       push({ ok: true, text: "Xong! Link thiệp: " + pagesUrl });
       setStatus(statusEl, "ok", "Đã xuất bản thành công. GitHub Pages cần 1–2 phút để cập nhật lần đầu.<br>" +
         'Link thiệp: <a class="underline font-semibold" href="' + pagesUrl + '" target="_blank" rel="noopener">' + pagesUrl + "</a><br>" +
-        'File trên repo: <a class="underline" href="' + fileUrl + '" target="_blank" rel="noopener">' + fileUrl + "</a>");
+        'File trên repo: <a class="underline" href="' + fileUrl + '" target="_blank" rel="noopener">' + fileUrl + "</a><br>" +
+        '<span class="block mt-2 p-2 rounded bg-amber-50 border border-amber-300 text-amber-800 text-sm">⚠ <b>Bảo mật token:</b> test xong hãy thu hồi token vừa dùng tại <a class="underline font-semibold" href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a> (bấm Revoke), hoặc giới hạn lại quyền của nó — và bấm nút “Xoá token” trong mục này để gỡ token khỏi máy này.</span>');
       var copyBtn = $("#btnCopyPages");
       if (copyBtn) {
         copyBtn.hidden = false;
