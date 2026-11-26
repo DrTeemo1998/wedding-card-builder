@@ -19,7 +19,11 @@ html = html.replace(
   if (!html.includes(tag)) throw new Error("Không tìm thấy thẻ script: " + tag);
   const code = read("assets/js/" + f);
   if (code.includes("</script>")) throw new Error("File " + f + " chứa chuỗi </script> — sẽ vỡ HTML khi inline!");
-  html = html.replace(tag, "<script>\n" + code + "\n</script>");
+  /* QUAN TRỌNG: phải dùng hàm thay thế, KHÔNG dùng chuỗi thay thế — vì
+     String.replace() hiểu "$$" trong chuỗi thay thế là ký tự "$" (đặc biệt),
+     sẽ biến mọi "$$" trong code (helper querySelectorAll) thành "$" và làm
+     vỡ toàn bộ Builder (picker trống, preview trắng, ExportLib lỗi). */
+  html = html.replace(tag, function () { return "<script>\n" + code + "\n</script>"; });
 });
 if (/(src|href)=["']assets\//.test(html)) throw new Error("Còn tham chiếu file nội bộ chưa inline!");
 const out = path.resolve(process.env.HOME, "workspace/wcb-dev-test.html");
